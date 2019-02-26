@@ -1,0 +1,181 @@
+﻿@model InvoiceIndexViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="~/content/lib/html5.js"></script>
+    <script type="text/javascript" src="~/content/lib/respond.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="~/content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <link href="~/content/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" />
+    <title>票据明细</title>
+</head>
+<body>
+    <div class="pd-20">
+        <form class="form form-horizontal" id="form-perm-edit">
+            <input type="hidden" value="@Model.Invoice.Id" id="Id" name="Id" />
+            <div class="row cl">
+                <label class="form-label col-3">购买人：</label>
+                <div class="formControls col-7">
+                    <input type="text" class="input-text" value="@Model.Invoice.TeacherName" readonly>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">购买班级：</label>
+                <div class="formControls col-7">
+                    <input type="text" class="input-text" value="@Model.Invoice.ClassName" readonly>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">物品名称：</label>
+                <div class="formControls col-7">
+                    <input type="text" class="input-text" value="@Model.Invoice.GoodsName" readonly>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">总金额：</label>
+                <div class="formControls col-7">
+                    <input type="text" class="input-text" value="@Model.Invoice.TotalStr" readonly>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">购买时间：</label>
+                <div class="formControls col-7">
+                    <input type="text" class="input-text" value="@Model.Invoice.BuyDateTimeStr" readonly>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">购买明细：</label>
+                <div class="formControls col-7">
+                    <textarea class="textarea" rows="" cols="" readonly>@Model.Invoice.Detail</textarea>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">票据存档：</label>
+                <div class="formControls col-7">
+
+                    @foreach (var pic in Model.Pics)
+                    {
+                        <a href="@pic.Url" data-lightbox="gallery" data-title="票据存档">
+                            <img src="@pic.Url" style="max-width: 150px" id="" />
+                        </a>
+                    }
+
+                </div>
+                <div class="col-2"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">驳回原因：</label>
+                <div class="formControls col-7">
+                    <textarea class="textarea" rows="" cols="" readonly>@Model.Invoice.NoPassReason</textarea>
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <div class="col-10 col-offset-2">
+                    @if (Model.Invoice.Status == ShenHeZhuangTai.MoRen)
+                    {
+
+                        <button type="button" class="btn btn-success radius" id="shenhe-ok" onclick="shenhe(true, @Model.Invoice.Id)"><i class="icon-ok"></i> 通过</button>
+                        <button type="button" class="btn btn-danger radius" id="shenhe-cancel" onclick="shenhe(false, @Model.Invoice.Id)"><i class="icon-cancel"></i> 退回</button>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/lightbox2/2.8.1/js/lightbox-plus-jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    layer.config({
+        extend: './extend/layer.ext.js'
+    });
+    function shenhe(status, id) {
+        if (status) {
+            //审核通过
+            layer.confirm("确认要通过审核吗？", function (index) {
+                $.ajax({
+                    type: "post",
+                    url: "/Invoice/Shenhe",
+                    data: { id: id, status: 2 },
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            layer.msg('已审核!', { icon: 1, time: 3000 }, function () {
+                                //location.replace(location.href);
+                                parent.location.reload();
+                            });
+                        }
+                        else {
+                            layer.msg('审核失败!', { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            });
+        } else {
+                
+                
+            //驳回
+            layer.prompt(
+                { title: '请输入驳回原因，并确认', formType: 2 },
+                function (text) {
+                    //驳回原因发送到后台
+                    $.ajax({
+                        type: "post",
+                        url: "/Invoice/Shenhe",
+                        data: { id: id, status: 3, msg: text },
+                        success: function (data) {
+                            if (data.status == "ok") {
+                                layer.msg('已审核!', { icon: 1, time: 3000 }, function () {
+                                    //location.replace(location.href);
+                                    parent.location.reload();
+                                });
+                            }
+                            else {
+                                layer.msg('审核失败!', { icon: 2, time: 3000 });
+                            }
+                        },
+                        error: function (data) {
+                            //alert(data.error);
+                            layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                        }
+                    });
+                    //layer.msg("id为" + id + ",驳回原因是" + text);
+                }
+            );
+        }
+    }
+</script>
+</body>
+</html>
+
+
+

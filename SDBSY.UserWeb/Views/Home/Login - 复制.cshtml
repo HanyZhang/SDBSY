@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>登录</title>
+    <link rel="stylesheet" href="~/content/css/common.css" />
+    <link rel="stylesheet" href="~/content/css/login.css" />
+</head>
+<body>
+    <div id="login"></div>
+    <div class="login_bg">
+        <div id="logo">
+            <img src="~/content/images/logo00.png" alt="" />
+        </div>
+        <form action="" id="form-login">
+            <div class="userName">
+                <lable>手机号：</lable>
+                <input type="text" name="phoneNum" placeholder="手机号"  required datatype="m" nullmsg="不能为空"/>
+            </div>
+            <div class="passWord">
+                <lable>密&nbsp;&nbsp;&nbsp;码：</lable>
+                <input type="password" name="password" placeholder="密码"  required datatype="*6-20" nullmsg="不能为空"/>
+            </div>
+            <div class="captcha">
+                <lable>验证码：</lable>
+                <input type="text" name="loginCaptcha" placeholder="验证码" style="width:30%" required datatype="*" nullmsg="不能为空"/>
+                <div style="width:30%;margin-top:-3.5%;float:right;">
+                <img src="~/Main/CreateCaptcha" id="imgVerifyCode" style="height:100%">
+                    </div>
+            </div>
+            <div class="choose_box">
+                <a href="~/Main/Register">没有账号</a>
+            </div>
+            <button class="login_btn" type="button" id="btnLogin">登&nbsp;&nbsp;录</button>
+        </form>
+
+    </div>
+
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/icheck/jquery.icheck.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/Validform/5.3.2/Validform.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/layer/1.9.3/layer.js"></script>
+    <script>
+        $(function () {
+            $("#imgVerifyCode").click(function () {
+                $("#imgVerifyCode").attr("src", "/Main/CreateCaptcha?t=" + Math.random());
+            });
+            $("#imgVerifyCode").click();//避免部分浏览器刚打开时加载上次的缓存验证码
+            var validForm = $("#form-login").Validform({ tiptype: 2 });
+            $("#btnLogin").click(function () {
+                if (validForm.check(false)) {
+                    var formData = $("#form-login").serializeArray();
+                    $.ajax({
+                        url: "/Main/Login",
+                        dataType: "json",
+                        data: formData,
+                        type: "post",
+                        success: function (res) {
+                            if (res.status == "ok") {
+                                layer.msg('登录成功,正在跳转!', { icon: 1, time: 3000 }, function () {
+                                    location.replace("/Main/Index");
+                                });
+                            }
+                            else {
+                                layer.msg(res.errorMsg, { icon: 2, time: 3000 }, function () {
+                                    location.reload();
+                                });
+                            }
+                        },
+                        error: function () {
+                            layer.msg("网络请求失败", { icon: 2, time: 3000 });
+                        }
+                    });
+                }
+            });
+
+
+
+        })
+    </script>
+
+</body>
+</html>

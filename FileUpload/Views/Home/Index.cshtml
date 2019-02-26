@@ -1,0 +1,36 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/scripts/jquery-1.8.3.min.js"></script>
+    <script>
+        $(function(){
+            //var radios = document.getElementsByName("jizai");
+            var radios= $("input[name=jizai]");
+            for (var i = 0; i < radios.length ; i++)
+            {
+                if (radios.eq(i).val() == 1)
+                {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+        })
+    </script>
+</head>
+<body>
+    <div> 
+        <form action="/Home/UploadAsync" method="post" enctype="multipart/form-data">
+            <br/>
+            <input type="file" name="file"/><br/>
+            <input type="submit" id="btnSave" value="提交"/>
+        </form>
+    </div>
+</body>
+</html>

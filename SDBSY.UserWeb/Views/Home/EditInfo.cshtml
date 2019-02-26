@@ -1,0 +1,600 @@
+﻿@model EditInfoViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>编辑幼儿信息</title>
+    <link rel="stylesheet" type="text/css" href="~/hui/css/hui.css" />
+</head>
+<body style="background:#FCFCFC;" onload="loadRadio()">
+    <header class="hui-header">
+        <div id="hui-back"></div>
+        <h1>滨州市实验幼儿园信息采集</h1>
+    </header>
+    <div class="hui-wrap">
+        <form style="padding:28px 10px;" class="hui-form" id="form1">
+            <input type="hidden" name="Id" value="@Model.Student.Id">
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">幼儿姓名</div>
+            <input type="text" class="hui-input hui-input-clear" name="name" value="@Model.Student.Name" placeholder="幼儿姓名" checkType="string" checkData="1," checkMsg="姓名必填" />
+        </div>
+        @if (Model.ShowChooseClass)
+        {
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">所在班级</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("ClassId", new SelectList(Model.Classes,
+                        nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value),Model.Student.ClassId))
+                </div>
+            </div>
+        }
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">性别</div>
+                <div class="hui-form-radios" style="line-height:38px;" id="gender">
+                    <input type="radio" value="False" name="gender" id="g1" /><label for="g1">男</label><br />
+                    <input type="radio" value="True" name="gender" id="g2" /><label for="g2">女</label>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">出生日期</div>
+                <input type="hidden" name="birthDate" id="birthDate" value="@Model.Student.BirthDate.ToString("yyyy-MM-dd")" />
+                <input type="date" class="hui-button hui-button-large hui-date-picker" onchange="getVal(this)" value="@Model.Student.BirthDate.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">证件类型</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("IdCardTypeId", new SelectList(Model.IdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.IdCardTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">证件号码</div>
+                <input type="text" name="IdCardNum" id="IdCardNum" value="@Model.Student.IdCardNum" class="hui-input hui-input-clear" placeholder="证件号码" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">血型</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("BloodTypeId", new SelectList(Model.BloodTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.BloodTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">国籍</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("CountryId", new SelectList(Model.Countrties,
+                             nameof(CountryDTO.Id), nameof(CountryDTO.Name), Model.Student.CountryId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">民族</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("NationId", new SelectList(Model.Nations,
+                             nameof(NationDTO.Id), nameof(NationDTO.Name), Model.Student.NationId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">港澳台侨外</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("IdentityId", new SelectList(Model.Identities,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.IdentityId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">出生地</div>
+                <button type="button" class="hui-button " id="btnBirth">@Model.Student.BirthPlaceName</button>
+                <input type="hidden" id="BirthPlaceId" name="BirthPlaceId" value="@Model.Student.BirthPlaceId" />
+                @*<div class="hui-form-select">
+            @Html.DropDownList("BirthPlaceId", new SelectList(Model.Places,
+                     nameof(PlaceDTO.Id), nameof(PlaceDTO.Name),Model.Student.BirthPlaceId))
+        </div>*@
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">籍贯</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.PriginPlace" name="PriginPlace" placeholder="籍贯" checkType="string" checkData="1,100" checkMsg="籍贯必填" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">户口性质</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("HuKouXingZhiId", new SelectList(Model.HuKouXingZhi,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.HuKouXingZhiId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">非农户口类型</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("FeiNongHuKouTypeId", new SelectList(Model.FeiNongHuKouTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.FeiNongHuKouTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">户口所在地</div>
+                <button type="button" class="hui-button " id="btnHuKou">@Model.Student.HuKouPlaceName</button>
+                <input type="hidden" id="HuKouPlaceId" name="HuKouPlaceId" value="@Model.Student.HuKouPlaceId"/>
+                @*<div class="hui-form-select">
+            @Html.DropDownList("HuKouPlaceId", new SelectList(Model.Places,
+                     nameof(PlaceDTO.Id), nameof(PlaceDTO.Name), Model.Student.HuKouPlaceId))
+        </div>*@
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">现住址</div>
+                <input type="text" class="hui-input hui-input-clear" name="HomePlace" value="@Model.Student.HomePlace" placeholder="现住址" checkType="string" checkData="1,100" checkMsg="现住址必填" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">就读方式</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("StudyTypeId", new SelectList(Model.StudyTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.StudyTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">是否独生子女</div>
+                <div class="hui-form-radios" style="line-height:38px;" id="isOnlyBaby">
+                    <input type="radio" value="False" name="IsOnlyBaby" id="o1" /><label for="o1">否</label><br />
+                    <input type="radio" value="True" name="IsOnlyBaby" id="o2" /><label for="o2">是</label>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">是否留守儿童</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("IsStayAtHomeId", new SelectList(Model.IsStayAtHome,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.IsStayAtHomeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">是否进城务工子女</div>
+                <div class="hui-form-radios" style="line-height:38px;" id="isFollowWorkInCity">
+                    <input type="radio" value="False" name="IsFollowWorkInCity" id="f1" /><label for="f1">否</label><br />
+                    <input type="radio" value="True" name="IsFollowWorkInCity" id="f2" /><label for="f2">是</label>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">健康状况</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("HealthyTypeId", new SelectList(Model.HealthyTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.HealthyTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">是否残疾幼儿</div>
+                <div class="hui-form-radios" style="line-height:38px;" id="isDisability">
+                    <input type="radio" value="False" name="IsDisability" id="d1" /><label for="d1">否</label><br />
+                    <input type="radio" value="True" name="IsDisability" id="d2" /><label for="d2">是</label>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">残疾类别</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("DisabilityTypeId", new SelectList(Model.DisabilityTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.DisabilityTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">是否孤儿</div>
+                <div class="hui-form-radios" style="line-height:38px;" id="isOrphan">
+                    <input type="radio" value="False" name="IsOrphan" id="n1" /><label for="n1">否</label><br />
+                    <input type="radio" value="True" name="IsOrphan" id="n2" /><label for="n2">是</label>
+                </div>
+            </div>
+            <input type="hidden" name="GuardianId" value="@Model.Student.GuardianId" />
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">监护人姓名</div>
+                <input type="text" class="hui-input hui-input-clear" name="GuardianName" value="@Model.Student.GuardianName" placeholder="监护人" checkType="string" checkData="1," checkMsg="监护人姓名必填" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">监护人证件类型</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("GuardianCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.GuardianCardTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">监护人证件号码</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.GuardianCardNum" name="GuardianCardNum" placeholder="监护人证件号码" checkType="string" checkData="18,18" checkMsg="监护人证件号码必填" />
+            </div>
+            <input type="hidden" name="FatherId" value="@Model.Student.FatherId" />
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">父亲姓名</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.FatherName" name="FatherName" id="FatherName" placeholder="父亲姓名" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">父亲证件类型</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("FatherCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value),Model.Student.FatherCardTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">父亲证件号码</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.FatherCardNum" name="FatherCardNum" id="FatherCardNum" placeholder="父亲证件号码" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">父亲工作单位</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.FatherWorkUnit" name="FatherWorkUnit" id="FatherWorkUnit" placeholder="父亲工作单位" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">父亲手机号</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.FatherPhoneNum" name="FatherPhoneNum" id="FatherPhoneNum" placeholder="父亲手机号" />
+            </div>
+            <input type="hidden" name="MotherId" value="@Model.Student.MotherId" />
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">母亲姓名</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.MotherName" name="MotherName" id="MotherName" placeholder="母亲姓名" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">母亲证件类型</div>
+                <div class="hui-form-select">
+                    @Html.DropDownList("MotherCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value),Model.Student.MotherCardTypeId))
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">母亲证件号码</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.MotherCardNum" name="MotherCardNum" id="MotherCardNum" placeholder="母亲证件号码" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">母亲工作单位</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.MotherWorkUnit" name="MotherWorkUnit" id="MotherWorkUnit" placeholder="母亲工作单位" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">母亲手机号</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.MotherPhoneNum" name="MotherPhoneNum" id="MotherPhoneNum" placeholder="母亲手机号" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">其他联系电话</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.OtherTel" name="otherTel" placeholder="其他联系电话" checkType="phone" checkMsg="其他联系电话格式错误" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">有无传染病史</div>
+                <div class="hui-form-textarea">
+                    <textarea placeholder="请详细描述" name="hasInfection" checkType="string" checkData="1," checkMsg="有无传染病史必填">@Model.Student.HasInfection.Trim()</textarea>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">幼儿姓名开户的建设银行卡</div>
+                <input type="text" class="hui-input hui-input-clear" value="@Model.Student.BankCardNum" name="BankCardNum" placeholder="幼儿姓名开户的建设银行卡" checkType="string" checkData="1," checkMsg="银行卡号必填" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">幼儿照片</div>
+                <div>
+                    <div class="hui-wrap" id="photo">
+                        <button type="button" class="hui-button hui-fl" style="margin:2px 0px 0px 8px;" onclick="uploadImg('photo')">修改</button>
+
+                        <input type="hidden" class="input-text" value="@Model.Student.PhotoUrl" id="photoUrl" name="photoUrl" checkType="string" checkData="1," checkMsg="幼儿照片请上传">
+                        
+                            <img id="photoImg" src="@Model.Student.PhotoUrl" />
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">幸福一家人</div>
+                <div>
+                    <div class="hui-wrap" id="tijian">
+                        <button type="button" class="hui-button hui-fl" style="margin:2px 0px 0px 8px;" onclick="uploadImg('tijian')">修改</button>
+
+                        <input type="hidden" class="input-text" value="@Model.Student.TijianUrl" id="tijianUrl" name="tijianUrl" checkType="string" checkData="1," checkMsg="全家福请上传">
+                        
+                            <img id="tijianImg" src="@Model.Student.TijianUrl" />
+                        
+                    </div>
+                </div>
+            </div>
+            <div style="padding:15px 8px;">
+                @if (Model.Student.Status == 1)
+                {
+                    <button type="button" class="hui-button hui-primary hui-fr" id="submitBtn">保存</button>
+                }
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="~/hui/js/hui.js"></script>
+    <script type="text/javascript" src="~/hui/js/hui-form.js"></script>
+<script type="text/javascript" src="~/hui/js/hui-image-cuter.js" charset="UTF-8"></script>
+<script src="~/hui/js/hui-picker.js"></script>
+<script src="~/hui/js/cities.js"></script>
+    <script type="text/javascript">
+        hui.formInit();
+        hui.datePicker();
+
+        //出生地 id 
+        var picker2 = new huiPicker("#btnBirth",
+            function () {
+                var sheng = picker2.getText(0);
+                var shi = picker2.getText(1);
+                var xianqu = picker2.getText(2);
+                var shengCode = picker2.getVal(0);
+                var shiCode = picker2.getVal(1);
+                var xianCode = picker2.getVal(2);
+                var code;
+                if (xianCode == null || xianCode.length <= 0) {
+                    if (shiCode == null || shiCode.length <= 0) {
+                        code = shengCode;
+                    } else {
+                        code = shiCode;
+                    }
+                } else {
+                    code = xianCode;
+                }
+                hui("#btnBirth").html(xianqu);
+                hui("#BirthPlaceId").val(code);
+            });
+        picker2.level = 3;
+        picker2.bindRelevanceData(cities);
+        //户口所在地id
+        var picker = new huiPicker("#btnHuKou",
+            function () {
+                var sheng = picker.getText(0);
+                var shi = picker.getText(1);
+                var xianqu = picker.getText(2);
+                var shengCode = picker.getVal(0);
+                var shiCode = picker.getVal(1);
+                var xianCode = picker.getVal(2);
+                var code;
+                if (xianCode == null || xianCode.length <= 0) {
+                    if (shiCode == null || shiCode.length <= 0) {
+                        code = shengCode;
+                    } else {
+                        code = shiCode;
+                    }
+                } else {
+                    code = xianCode;
+                }
+
+                hui("#btnHuKou").html(xianqu);
+                hui("#HuKouPlaceId").val(code);
+            });
+        picker.level = 3;
+        picker.bindRelevanceData(cities);
+
+
+
+
+        function loadRadio() {
+            //加载radio的选中样式
+            var gender = '@(Model.Student.Gender)';
+            var isOnlyBaby = '@(Model.Student.IsOnlyBaby)';
+            var isFollowWorkInCity = '@(Model.Student.IsFollowWorkInCity)';
+            var isDisability = '@(Model.Student.IsDisability)';
+            var isOrphan = '@(Model.Student.IsOrphan)';
+            var radios = hui("#gender input");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == gender) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = hui("#isOnlyBaby input");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isOnlyBaby) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = hui("#isFollowWorkInCity input");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isFollowWorkInCity) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = hui("#isDisability input");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isDisability) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = hui("#isOrphan input");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isOrphan) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            
+        }
+        
+        function getVal(_selfBtn) {
+            var val = hui(_selfBtn).val();
+            hui("#birthDate").val(val);
+            //console.log(val);
+        }
+
+        //表单元素数据收集演示
+        hui('#submitBtn').click(function () {
+            var res = huiFormCheck('#form1');
+            //提交
+            if (res) {
+                var data = hui.getFormData('#form1');
+                //上传到服务端代码
+                hui.ajax({
+                    type: 'POST',
+                    url: "/Home/EditInfo?"+@Model.Student.Id,
+                    data: data,
+                    backType: 'JSON',
+                    beforeSend: function () {//请求前执行的函数
+                        hui.loading('提交中...');
+                    },
+                    complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                        hui.closeLoading();
+                    },
+                    success: function (msg) {//请求成功后执行的回调函数
+                        if (msg.status == "ok") {
+                            hui.iconToast('修改成功!');
+                            //setTimeout(function () {
+                            //    hui.formInit();
+                            //}, 2000);
+                            window.location.href = "/Home/Main/";
+                        } else if (msg.status == "redirect")//登录超时
+                        {
+                            hui.toast(msg.errorMsg);
+                            window.location.href = msg.data;
+                        }
+                        else {
+                            hui.toast('保存失败!' + msg.errorMsg);
+                        }
+                    },
+                    error: function (e) {//请求失败时执行的回调函数
+                        hui.toast('网络请求失败');
+                    }
+                });
+
+            }
+        });
+        //附加验证函数用于特殊检查项目
+        function huiFormCheckAttach() {
+            //出生日期
+            var birthDate = hui("#birthDate").val();
+            if (birthDate.length < 1) { hui.toast('请选择出生日期'); return false; }
+            //幼儿身份证
+            var idCardTypeId = hui("#IdCardTypeId").val();
+            var idCardNum = hui("#IdCardNum").val();
+            if (idCardTypeId != 7)//幼儿证件类型----其他
+            {
+                if (idCardNum.length <= 0) {
+                    hui.toast('请填写正确的幼儿证件号码');
+                    return false;
+                }
+            }
+            //民族、户口
+            var countryId = hui("#CountryId").val();
+            var nationId = hui("#NationId").val();
+            var huKouXingZhiId = hui("#HuKouXingZhiId").val();
+            if (countryId == 34154) {
+                if (nationId == 0) {
+                    hui.toast('中国国籍请选择民族');
+                    return false;
+                }
+                if (huKouXingZhiId == 0) {
+                    hui.toast('中国国籍请选择户口性质');
+                    return false;
+                }
+            }
+            var feiNongHuKouTypeId = hui("#FeiNongHuKouTypeId").val();
+            if (huKouXingZhiId == 38) {
+                if (feiNongHuKouTypeId == 0) {
+                    hui.toast('非农户口请选择类型');
+                    return false;
+                }
+            }
+            //是否残疾
+            var isDisability = hui("#IsDisability").val();
+            var disabilityTypeId = hui("#DisabilityTypeId").val();
+            if (isDisability == "true") {
+                if (disabilityTypeId == 0) {
+                    hui.toast('请选择幼儿残疾类型');
+                    return false;
+                }
+            }
+            //父母信息
+            var fatherName = hui("#FatherName").val();
+            var fatherCardTypeId = hui("#FatherCardTypeId").val();
+            var fatherCardNum = hui("#FatherCardNum").val();
+            var fatherWorkUnit = hui("#FatherWorkUnit").val();
+            var fatherPhoneNum = hui("#FatherPhoneNum").val();
+            if (fatherName.length > 0) {
+                if (fatherCardTypeId != 19)//成人证件类型----其他
+                {
+                    if (fatherCardNum.length <= 0) {
+                        hui.toast('请填写父亲证件号码');
+                        return false;
+                    }
+                }
+                if (fatherWorkUnit.length <= 0) {
+                    hui.toast('请填写父亲工作单位');
+                    return false;
+                }
+                if (fatherPhoneNum.length <= 0) {
+                    hui.toast('请填写父亲手机号');
+                    return false;
+                }
+            }
+            var motherName = hui("#MotherName").val();
+            var motherCardTypeId = hui("#MotherCardTypeId").val();
+            var motherCardNum = hui("#MotherCardNum").val();
+            var motherWorkUnit = hui("#MotherWorkUnit").val();
+            var motherPhoneNum = hui("#MotherPhoneNum").val();
+            if (motherName.length > 0) {
+                if (motherCardTypeId != 19)//成人证件类型----其他
+                {
+                    if (motherCardNum.length <= 0) {
+                        hui.toast('请填写母亲证件号码');
+                        return false;
+                    }
+                }
+                if (motherWorkUnit.length <= 0) {
+                    hui.toast('请填写母亲工作单位');
+                    return false;
+                }
+                if (motherPhoneNum.length <= 0) {
+                    hui.toast('请填写母亲手机号');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /*** 打开图片剪裁页面 ***/
+        function uploadImg(index) {
+            //获取当前网址，如： http://localhost:8080/Tmall/index.jsp 
+            var curWwwPath = window.document.location.href;
+
+            //获取主机地址之后的目录如：/Tmall/index.jsp 
+            var pathName = window.document.location.pathname;
+            var pos = curWwwPath.indexOf(pathName);
+
+            //获取主机地址，如： http://localhost:8080 
+            var localhostPath = curWwwPath.substring(0, pos); 
+
+
+            var useragent = navigator.userAgent;
+            if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
+                window.open(localhostPath+"/imgupload.html?type=" + index);
+            } else {
+                window.location.href = localhostPath+"/imgupload.html?type=" + index;
+            }
+        }
+
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=")
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1
+                    c_end = document.cookie.indexOf(";", c_start)
+                    if (c_end == -1) c_end = document.cookie.length
+                    return unescape(document.cookie.substring(c_start, c_end))
+                }
+            }
+            return ""
+        }
+        window.onload = function () {//页面加载时对照片做处理
+            loadRadio();
+            var useragent = navigator.userAgent;
+            if (useragent.match(/MicroMessenger/i) == 'MicroMessenger') {
+                var photo = getCookie("photo");
+                var tijian = getCookie("tijian");
+                //hui.toast(photo);
+                if (photo != null && photo.length>0) {
+                    var img = window.document.getElementById("photoImg");
+                    if (img == null) {
+                        window.document.getElementById("photo").innerHTML += '<img id="photoImg" src="' + photo + '">';
+                    } else {
+                        img.src = photo;
+                    }
+                    window.document.getElementById("photoUrl").value = photo;
+                }
+                if (tijian != null && tijian.length>0) {
+                    var img = window.document.getElementById("tijianImg");
+                    if (img == null) {
+                        window.document.getElementById("tijian").innerHTML += '<img id="tijianImg" src="' + tijian + '">';
+                    } else {
+                        img.src = tijian;
+                    }
+                    window.document.getElementById("tijianUrl").value = tijian;
+                }
+
+            }
+        }
+    </script>
+</body>
+</html>

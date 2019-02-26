@@ -1,0 +1,31 @@
+﻿@model object
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>抱歉</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet"/>
+    <link href="~/content/css/bass.css" rel="stylesheet"/>
+    <link href="~/content/css/index.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+    <div class="header">
+        <h1>问题</h1>
+        <a href="javascript:window.history.back(-1)" class="return"><i class="icon-16"></i></a>
+    </div>
+</header>
+<div class="all_box all_boxNodown">
+    <!-- 空内容 -->
+    <div class="empty">
+        <i class="icon-uniE957"></i>
+        @Model
+    </div>
+</div>
+</body>
+</html>

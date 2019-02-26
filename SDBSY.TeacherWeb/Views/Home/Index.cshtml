@@ -1,0 +1,61 @@
+﻿@model AdminUserDTO
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>个人中心</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet"/>
+    <link href="~/content/css/bass.css" rel="stylesheet"/>
+    <link href="~/content/css/index.css" rel="stylesheet"/>
+</head>
+<body>
+<div>
+    <header>
+        <div class="header">
+            <h1>个人中心</h1>
+        </div>
+    </header>
+    <div style="height: 2.5rem;"></div>
+</div>
+<div class="all_box all_boxNodown">
+    <div class="my-wallet">
+        <div class="balance">
+            <i class="icon-uniE92B"></i>
+            <p>@Model.UserName</p>
+            <div class="my-Limit">
+                
+            </div>
+        </div>
+    </div>
+    <div class="balance">
+        <ul>
+            <li><a href="@Url.Action("Index","Teacher")"><i class="ba-color icon-uniE90B"></i><p>个人信息</p></a></li>
+            <li><a href="@Url.Action("List","Certificate")"><i class="ba-color ba-color2 icon-uniE919"></i><p>证书信息</p></a></li>
+            <li><a href="@Url.Action("List","Training")"><i class="ba-color ba-color3 icon-uniE934"></i><p>培训信息</p></a></li>
+
+            <li><a href="@Url.Action("List","Invoice")" ><i class="ba-color ba-color2 icon-uniE94C"></i><p>发票报销</p></a></li>
+            <li><a href="#" onclick="kaifa()"><i class="ba-color ba-color3 icon-uniE94B"></i><p>物品申领</p></a></li>
+            
+        </ul>
+
+    </div>
+    
+</div>
+<script src="~/content/layer/mobile/layer.js"></script>
+<script>
+    function kaifa() {
+        layer.open({
+            shadeClose: false,
+            content: '开发中，敬请期待',
+            skin: 'msg',
+            time: 3 //3秒后自动关闭
+        });
+    }
+</script>
+</body>
+</html>

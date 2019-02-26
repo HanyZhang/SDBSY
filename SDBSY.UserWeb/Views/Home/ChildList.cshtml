@@ -1,0 +1,49 @@
+﻿@model StudentDTO[]
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>幼儿信息</title>
+    <link rel="stylesheet" type="text/css" href="~/hui/css/hui.css" />
+</head>
+<body>
+    <header class="hui-header">
+        <h1>滨州市实验幼儿园信息采集</h1>
+        <div id="hui-header-menu"></div>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-center-title" style="margin-top:15px;"><h1>幼儿信息</h1></div>
+        <div style="padding:28px; text-align:center;" class="hui-text">
+            @foreach (var stu in Model)
+            {
+                <button type="button" class="hui-button hui-button-large" onclick="look(@stu.Id)">@stu.Name</button>
+            }
+            
+            
+        </div>
+    </div>
+    <script type="text/javascript" src="~/hui/js/hui.js"></script>
+    <script type="text/javascript">
+        var meuns = ['退出登录'];
+        var cancel = '关闭菜单';
+        hui('#hui-header-menu').click(function () {
+            hui.actionSheet(meuns, cancel, function (e) {
+                //console.log(e.index);
+                //hui.toast(e.innerHTML);
+                if (e.index == '0') {
+                      window.location.href = "/Home/Logout";
+
+                }
+            });
+        });
+        function look(id) {
+            window.location.href ="/Home/EditInfo/"+id;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+﻿@model FoodDTO[]
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>食材列表</title>
+    <link rel="stylesheet" type="text/css" href="~/hui/css/hui.css" />
+    <style>
+        .sansan {
+            width:30%;
+            float:left;
+            
+        }
+        #ulist .hui-swipe-do:nth-of-type(2n+1){
+            background-color:lightgrey
+        }
+    </style>
+</head>
+<body>
+    <header class="hui-header">
+        <div id="hui-back"></div>
+        <h1>食材列表</h1>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-common-title" style="margin-top:15px;">
+            <div class="hui-common-title-line"></div>
+            <div class="hui-common-title-txt">
+                <button type="button" class="hui-button hui-button-large" onclick="addFood()">添加食材</button>
+            </div>
+            <div class="hui-common-title-line"></div>
+        </div>
+        <div id="refreshContainer" class="hui-refresh">
+            <!-- hui-refresh-icon 为下拉动画展示区域 -->
+            <div class="hui-refresh-icon"></div>
+            <div class="hui-list" id="ulist" style="margin-top:10px;">
+                @*
+                @foreach (var item in Model)
+                {
+
+                    <div class="hui-swipe-do">
+                        <div class="hui-swipe-do-doms" style="height:50px">
+                            <div class="hui-swipe-do-content">
+                                <div style="padding-left:10px; line-height:50px;">
+                                    <div class="sansan">@item.Name</div>
+                                    <div class="sansan">@item.Unit</div>
+                                    <div class="sansan">@item.Supplier</div>
+                                </div>
+                            </div>
+                            <div class="hui-swipe-do-btn" onclick="removeDom(@item.Id);">删除</div>
+                        </div>
+                    </div>
+
+                }*@
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/hui/js/hui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/hui/js/hui-refresh-load-more.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        hui.swipeDo();
+        //下拉刷新
+        var p = 2;
+        hui.refresh('#refreshContainer', refresh);
+        function refresh() {
+            if (hui.refreshNumber < 1) { hui.loading('加载中...'); }
+            hui.ajax({
+                type:"POST",
+                url: '/Mobile/FoodListPage?page='+p,
+                
+                beforeSend: function () { hui.loading(); },
+                complete: function () { hui.closeLoading(); },
+                success: function (res) {
+                    if (res.status == "ok") {
+                        var data = res.data.split('--hcSplitor--');
+                        var html = '';
+                        for (var i = 0; i < data.length; i++) {
+                            html += '<a href="javascript:hui.toast(\'hi.....\');"><div class="hui-list-text">' + data[i] + '</div></a>';
+                        }
+                        hui('#ulist').html(html);
+                        hui.endRefresh();
+                        //关闭loading
+                        p++;
+                    }
+                    else {
+                        hui.toast('请求失败！');
+                    }
+                },
+                error:function() {
+                    hui.toast('连接服务器失败！');
+                    hui.endRefresh();
+                }
+            });
+        }
+        //删除食材
+        function removeDom(id) {
+            hui.confirm("你确定要删除吗？", ["取消", "确定"], function () {
+                //hui.alert("删除了");
+                //确定之后发起ajax请求
+                hui.ajax({
+                    type: 'POST',
+                    url: "/Mobile/FoodDelete",
+                    data: { id: id },
+                    backType: 'JSON',
+                    beforeSend: function () {//请求前执行的函数
+                        hui.loading('删除中...');
+                    },
+                    complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                        hui.closeLoading();
+                    },
+                    success: function (msg) {//请求成功后执行的回调函数
+                        if (msg.status == "ok") {
+                            hui.iconToast('删除成功!');
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
+
+                        }
+                        else if (msg.status == "timeout")//登录超时
+                        {
+                            hui.toast(msg.errorMsg);
+                            window.location.href = msg.data;
+                        }
+                        else {
+                            hui.toast('删除失败!' + msg.errorMsg);
+                        }
+                    },
+                    error: function (e) {//请求失败时执行的回调函数
+                        hui.toast('网络请求失败');
+                    }
+                });
+            });
+        }
+        //添加食材
+        function addFood() {
+            window.location.href = "/Mobile/FoodAdd";
+        }
+    </script>
+</body>
+</html>

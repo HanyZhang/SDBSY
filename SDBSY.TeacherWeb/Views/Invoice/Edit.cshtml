@@ -1,0 +1,216 @@
+﻿@model InvoiceEditViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>编辑发票</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <link href="~/content/css/mobileSelect.css" rel="stylesheet" />
+    <link href="~/content/css/DateTimePicker.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <header>
+            <div class="header">
+                <h1>编辑发票</h1>
+                <a href="javascript:window.history.back(-1)" class="return"><i class="icon-16"></i></a>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <div class="purchase c-Publish">
+        <form class="input-group" method="post" id="formEdit" enctype="multipart/form-data">
+
+            <input type="hidden" name="id" value="@Model.Invoice.Id" />
+            <div class="input-row">
+                <label>购买人</label>
+                <input type="text" value="@Model.Invoice.TeacherName" readonly>
+            </div>
+            <div class="input-row">
+                <label>物品名称</label>
+                <input type="text" placeholder="请输入物品名称" name="goodsName" value="@Model.Invoice.GoodsName" required>
+            </div>
+
+            <div class="input-row">
+                <label>购买时间</label>
+                <input type="text" placeholder="请输入购买时间" name="buyDateTime" value="@Model.Invoice.BuyDateTimeStr" id="buyDateTime" data-field="date" readonly="readonly">
+            </div>
+            <div class="input-row">
+                <label>购买班级</label>
+                <input type="text" readonly="readonly" id="ClassName" placeholder="请选择" value="@Model.Invoice.ClassName">
+                <input type="hidden" readonly="readonly" id="ClassId" name="ClassId" value="@Model.Invoice.ClassId">
+            </div>
+            <div class="input-row">
+                <label>总金额</label>
+                <input type="text" placeholder="请输入总金额,保留两位小数" value="@Model.Invoice.TotalStr" name="total" required pattern="^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$">
+            </div>
+            <div class="input-row">
+                <label>物品明细</label>
+                <textarea rows="4" placeholder="物品明细......" name="Detail" required>@Model.Invoice.Detail</textarea>
+            </div>
+            <div>
+                <label>存档资料</label>
+                <div class="Pu-img" id="Pu-img">
+                    @foreach (var pic in Model.Pics)
+                    {
+                    <a href="javascript:; " class="imgselect">
+                        <img src="@pic.Url">
+                    </a>
+                    }
+                    <a href="javascript:;" class="Pu-Add-img">
+                        <img src="~/content/images/add-img.png">
+                        <input type="file" id="upFiles" name="upFiles" multiple accept="image/*">
+                    </a>
+                </div>
+                <span id="warning" style="color: red; font-size: large;"></span>
+            </div>
+            <div id="dtBox"></div>
+            <button type="submit" class="btn cy-btn" id="btnSave">保存</button>
+        </form>
+    </div>
+    <script src="~/content/js/jquery.min.js"></script>
+    <script src="~/content/js/jquery.validate.min.js"></script>
+    <script src="~/content/layer/mobile/layer.js"></script>
+    <script src="~/content/js/mobileSelect.js"></script>
+    <script src="~/content/js/DateTimePicker.js"></script>
+    <script>
+    $(document).ready(function() {
+        $("#dtBox").DateTimePicker();
+
+        //$("#formAdd").submit(function() {
+        //    if (fileTypeBool || fileSizeBool) {
+        //        return false;
+        //    } else {
+        //        return true;
+        //    }
+        //});
+
+        $("#formEdit").validate({
+            //验证通过后执行的方法
+            submitHandler: function () {
+
+                //var formData = $("#formAdd").serializeArray();
+                var formData = new FormData(document.getElementById("formEdit"));
+                var loading = layer.open({
+                    shadeClose: false,
+                    type: 2,
+                    content: '保存中'
+                });
+                $.ajax({
+                    url: '@Url.Action("Edit","Invoice")',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: formData,
+                    contentType: false,//必须false才能加上正确的contentType
+                    processData:false,//必须false才能避开jq对formdata的默认处理
+                    beforeSend: function () {
+                        $("#btnSave").attr({disabled:"disabled"});
+                    },
+                    complete: function() {
+                        layer.close(loading);
+                        $("#btnSave").attr({ disabled: false });
+                    },
+                    success: function(res) {
+                        if (res.status == "ok") {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存成功',
+                                skin: 'msg',
+                                time: 3, //3秒后自动关闭
+                                end: function() {
+                                    window.location.href = '@Url.Action("List","Invoice")';
+                                }
+                            });
+
+                        }
+                        else {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存失败：'+res.errorMsg,
+                                skin: 'msg',
+                                time: 3 //3秒后自动关闭
+                            });
+                        }
+                    },
+                    error: function() {
+                        layer.open({
+                            shadeClose: false,
+                            content: '网络异常,请联系管理员',
+                            skin: 'msg',
+                            time: 3 //3秒后自动关闭
+                        });
+                    }
+            });
+            }
+        });
+
+    });
+    //图片类型判断
+    var fileTypeBool = true;
+    var fileSizeBool = true;
+    //获取图片大小
+    function getFileSize(file) {
+        var fileSize = 0;
+        fileSize = file.size;
+        fileSize = fileSize / 1048576;
+        return fileSize;
+    }
+
+    //根据上传的路径获取文件名称
+    function getNameFromPath(filePath) {
+        var objRE = new RegExp(/([^\/\\]+)$/);
+        var strName = objRE.exec(filePath);
+        if (strName == null) {
+            return null;
+        } else {
+            return strName[0];
+        }
+    }
+
+
+
+    //控件选择文件触发change事件时对文件类型和大小验证
+
+    $("#upFiles").change(function () {
+        var imgs = document.getElementsByClassName("imgselect");
+        if (imgs) {
+            //把之前加载的图片清空掉
+            var len = imgs.length;
+            for (var i = len-1;i>=0;i-- ) {
+                imgs[i].parentNode.removeChild(imgs[i]);
+            }
+        }
+        var files = document.getElementById("upFiles").files;
+        if (files && files[0]) {
+            for (var i = 0; i < files.length; i++) {
+                $("#Pu-img").prepend('<a href="javascript:; " class="imgselect"><img  src="' + window.URL.createObjectURL(files[i]) + '"></a>');
+            }
+        }
+
+    });
+
+    //班级
+    var classes = new MobileSelect({
+        trigger: "#ClassName",
+        title: "班级",
+        wheels: [
+            { data: @Html.Raw(Model.Classes)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#ClassName").val(data[0].value);
+            $("#ClassId").val(data[0].id);
+        }
+    });
+    </script>
+</body>
+</html>

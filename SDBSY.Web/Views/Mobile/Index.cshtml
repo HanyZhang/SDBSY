@@ -1,0 +1,50 @@
+﻿@model AdminUserDTO
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>用户中心</title>
+    <link rel="stylesheet" type="text/css" href="~/hui/css/hui.css" />
+</head>
+<body>
+    <header class="hui-header">
+        <h1>滨州市实验幼儿园后勤管理</h1>
+        <div id="hui-header-menu"></div>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-center-title" style="margin-top:15px;"><h1>@Model.UserName</h1></div>
+        <div style="padding:28px; text-align:center;" class="hui-text">
+            <button type="button" class="hui-button hui-button-large" id="foodlist">食材管理</button>
+            <button type="button" class="hui-button hui-button-large" id="foodbuyrecordlist" style="margin-top:15px;">入库记录</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/hui/js/hui.js"></script>
+    <script type="text/javascript">
+        var meuns = ['退出登录'];
+        var cancel = '关闭菜单';
+        hui('#hui-header-menu').click(function () {
+            hui.actionSheet(meuns, cancel, function (e) {
+                //console.log(e.index);
+                //hui.toast(e.innerHTML);
+                if (e.index == '0') {
+                    window.location.href = "/Mobile/Logout";
+
+                }
+            });
+        });
+        hui("#foodlist").click(function () {
+            window.location.href = "/Mobile/FoodList";
+        });
+        hui("#foodbuyrecordlist").click(function () {
+            window.location.href = "/Mobile/FoodBuyRecordList?id=0";
+        });
+
+    </script>
+</body>
+</html>
+

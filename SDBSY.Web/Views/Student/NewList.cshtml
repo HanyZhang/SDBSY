@@ -1,0 +1,578 @@
+﻿@model StudentDTO[]
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="~/content/lib/html5.js"></script>
+    <script type="text/javascript" src="~/content/lib/respond.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="~/content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>幼儿管理</title>
+</head>
+<body>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 幼儿管理 <span class="c-gray en">&gt;</span> 新报名幼儿 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="pd-20">
+        <div class="text-c">
+        </div>
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="l">
+                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                <a href="javascript:;" onclick="dataShenHe()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe64b;</i> 批量审核</a>
+                <a href="javascript:;" onclick="dataSet()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe61d;</i> 设置班级</a>
+                <a href="javascript:;" onclick="daochu()" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe644;</i> 批量导出</a>
+            </span>
+            <span class="r">共有数据：<strong>@Model.Count()</strong> 条</span>
+        </div>
+        <div class="mt-20">
+            <form id="formList">
+                <table class="table table-border table-bordered table-hover table-bg table-sort">
+                    <thead>
+                        <tr class="text-c">
+                            <th width="25"><input type="checkbox" name="" value=""></th>
+
+                            <th width="50">姓名</th>
+                            <th width="40">性别</th>
+                            <th width="50">出生日期</th>
+                            <th width="140">家庭住址</th>
+                            <th width="200">父母信息</th>
+                            <th width="50">报名时间</th>
+                            <th width="50">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="text-c">
+                                <td><input type="checkbox" value="@item.Id" name="selectedIds"></td>
+                                <td>@item.Name</td>
+                                <td>@item.GenderName</td>
+                                <td>@item.BirthDate.ToString("yyyy-MM-dd")</td>
+                                <td>@item.HomePlace</td>
+                                <td>
+                                    @item.FatherName &nbsp;&nbsp; @item.FatherPhoneNum &nbsp;&nbsp;@item.FatherWorkUnit
+                                    <br />
+                                    @item.MotherName &nbsp;&nbsp; @item.MotherPhoneNum &nbsp;&nbsp;@item.MotherWorkUnit
+                                </td>
+                                <td>@item.CreateDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td class="td-manage">
+                                    <a style="text-decoration:none" onClick="member_show('查看信息','/Student/Index/@item.Id','800','500')" href="javascript:;" title="详细信息"><i class="Hui-iconfont">&#xe62c;</i></a>
+                                    <a style="text-decoration:none" onClick="member_edit('编辑信息','/Student/Edit/@item.Id','800','500')" class="ml-5" href="javascript:;" title="编辑信息"><i class="Hui-iconfont">&#xe60c;</i></a>
+                                    <a title="审核" href="javascript:;" onclick="stu_shenhe(this,@item.Id)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe64b;</i></a>
+                                    <a style="text-decoration:none" onClick="layer_show('设置班级','/Student/FenBan/@item.Id','800','500')" class="ml-5" href="javascript:;" title="设置班级"><i class="Hui-iconfont">&#xe61d;</i></a>
+                                    <a title="删除" href="javascript:;" onclick="stu_del(this,@item.Id)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                </form>
+</div>
+    </div>
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="~/content/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript" src="~/content/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="~/content/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.admin.js"></script>
+    <script type="text/javascript">
+        var dicData = null;
+        // oSort是排序类型数组, 'chinese-asc'是自己定义的类型的排序(*-asc || *-desc)名称
+        // 插件应该会根据表格中的内容的类型(string, number, chinese)进行比较排序，
+        // 如果以chinese类型来排序则用oSort['chinese-asc']和oSort['chinese-desc']的方法
+        // oSort对应的function里面自定义比较方法
+        jQuery.fn.dataTableExt.oSort['chinese-asc'] = function (x, y) {
+            //javascript自带的中文比较函数，具体用法可自行查阅了解
+            return x.localeCompare(y);
+        };
+
+        jQuery.fn.dataTableExt.oSort['chinese-desc'] = function (x, y) {
+            return y.localeCompare(x);
+        };
+
+        // aTypes是插件存放表格内容类型的数组
+        // reg赋值的正则表达式，用来判断是否是中文字符
+        // 返回值push到aTypes数组，排序时扫描该数组，'chinese'则调用上面两个方法。返回null默认是'string'
+        jQuery.fn.dataTableExt.aTypes.push(function (sData) {
+            var reg = /^[\u4e00-\u9fa5]{0,}$/;
+            if (reg.test(sData)) {
+                return 'chinese';
+            }
+            return null;
+        });
+        $(function () {
+            $('.table-sort').dataTable({
+                "aaSorting": [[6, "desc"]],//默认第几个排序
+                "aLengthMenu": [10, 50, 100, 200, 500],//更改显示记录数选项
+                "bLengthChange": true,    //是否允许用户自定义每页显示条数。
+                "bProcessing": true,       //当datatable获取数据时候是否显示正在处理提示信息。
+                "bStateSave": true,//状态保存
+                "aoColumnDefs": [
+                  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                  { "orderable": false, "aTargets": [0,  4,5, 7] }// 制定列不参与排序
+                ]
+            });
+        });
+        /*批量审核*/
+        function dataShenHe() {
+            var vals = [];
+
+            $('input[name="selectedIds"]:checked').each(function (index, item) {
+                vals.push($(this).val());
+            });
+            if (vals.length <= 0) {
+                layer.msg('请选择要导出的信息!', { icon: 2, time: 3000 });
+                return;
+            }
+
+            layer.confirm('审核幼儿报名信息', {
+                btn: ["通过", "驳回", "取消"],
+                shade: false,
+                closeBtn: 0,
+            }, function () {
+                //layer_show("设置班级","/Student/FenBan/"+id);
+                $.ajax({
+                    type: "post",
+                    url: "/Student/PiLiangShenHe",
+                    data: { selectedIds: vals, pass: true },
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            //layer.confirm('审核通过，是否设置班级？', function (index) {
+                            //    layer_show("设置班级", "/Student/FenBan/" + id);
+                            //})
+
+                            layer.msg('已通过!', { icon: 1, time: 3000 }, function () {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            layer.msg('操作失败!' + data.errorMsg, { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            },
+                function () {
+                    $.ajax({
+                        type: "post",
+                        url: "/Student/PiLiangShenHe",
+                        data: { selectedIds: vals, pass: false },
+                        success: function (data) {
+                            if (data.status == "ok") {
+                                layer.msg('已驳回!', { icon: 1, time: 3000 }, function () {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                layer.msg('操作失败!' + data.errorMsg, { icon: 2, time: 3000 });
+                            }
+                        },
+                        error: function (data) {
+                            //alert(data.error);
+                            layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                        }
+                    });
+                });
+        }
+        /*审核*/
+        function stu_shenhe(obj,id){
+            layer.confirm('审核幼儿报名信息', {
+                btn: ["通过", "驳回", "取消"],
+                shade: false,
+                closeBtn: 0,
+            }, function () {
+                //layer_show("设置班级","/Student/FenBan/"+id);
+                $.ajax({
+                    type: "post",
+                    url: "/Student/ShenHe",
+                    data: { id: id, pass: true },
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            layer.confirm('审核通过，是否设置班级？', function (index) {
+                                layer_show("设置班级", "/Student/FenBan/" + id);
+                            })
+                            
+                            //layer.msg('已通过!', { icon: 1, time: 3000 }, function () {
+                            //    location.reload();
+                            //});
+                        }
+                        else {
+                            layer.msg('操作失败!' + data.errorMsg, { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            },
+                function () {
+                    $.ajax({
+                        type: "post",
+                        url: "/Student/ShenHe",
+                        data: { id: id, pass: false },
+                        success: function (data) {
+                            if (data.status == "ok") {
+                                layer.msg('已驳回!', { icon: 1, time: 3000 }, function () {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                layer.msg('操作失败!' + data.errorMsg, { icon: 2, time: 3000 });
+                            }
+                        },
+                        error: function (data) {
+                            //alert(data.error);
+                            layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                        }
+                    });
+                });
+
+        }
+        /*删除*/
+        function stu_del(obj,id){
+            layer.confirm('确认要删除吗？', function (index) {
+                $.ajax({
+                    type: "post",
+                    url: "/Student/Del",
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            layer.msg('已删除!', { icon: 1, time: 3000 }, function () {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            layer.msg('操作失败!'+data.errorMsg, { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            })
+        
+        }
+        /* 导出 */
+        function daochu() {
+            var vals = [];
+            
+            $('input[name="selectedIds"]:checked').each(function (index, item) {
+                vals.push($(this).val());
+            });
+            if (vals.length <= 0) {
+                layer.msg('请选择要导出的信息!', { icon: 2, time: 3000 });
+                return;
+            }
+            
+            //layer_show("选择导出字段", "/Student/ChooseField", "800", "500");
+
+            //打开字段选择界面，将选择的字段回传给本页面
+            layer.open({
+                type: 2,
+                area: ['800px', '400px'],
+                shade: 0.3,
+                shadeClose: false,//默认开启遮罩关闭
+                resize: false,//默认重设大小是否
+                maxmin: true,//默认最大最小化按钮
+                scrollbar: true,//默认滚动条是否开启
+                moveType: 1,//默认拖拽模式，0或者1
+                content: "/Student/ChooseField",
+                //如果不让iframe出现滚动条，
+                //可以content: ['http://sentsin.com', 'no']
+                btn: ['确定', '关闭'],
+                yes: function (index, layero) {
+                    var res = $(layero).find("iframe")[0].contentWindow.callbackdata();
+
+                    if (res) {
+                        dicData = res;
+                        
+                        if (dicData == null || dicData.length <= 0) {//没选择任何字段
+                            layer.msg('请选择需要的字段', { icon: 2, time: 3000 });
+                        }
+                        else {
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            //导出
+                            exportExcle(vals,dicData);
+                        }
+                    } 
+                    dicData = null;
+                    
+                    
+                },
+
+                cancel: function () {
+                    //右上角关闭回调
+                }
+            });
+        }
+        /*导出 */
+        function exportExcle(vals,dic){
+            
+            var dicFields = [];
+            $.each(dic, function (i, field) {
+                dicFields.push(field.value);
+            });
+            $.ajax({
+                url: "/Student/ExportExcle",
+                type: "post",
+                data: { selectedIds: vals, dicFields: dicFields },
+                dataType: "json",
+                success: function (res) {
+                    if (res.status == "ok") {
+                        layer.msg('正在导出!', { icon: 1, time: 3000 }, function () {
+                            location.href = res.data;
+                        });
+                    }
+                    else {
+                        layer.msg("错误:" + res.errorMsg, { icon: 2, time: 3000 });
+                    }
+                },
+                error: function () { layer.msg("网络请求出错", { icon: 2, time: 3000 }); }
+            });
+
+        }
+
+
+
+        /*批量操作*/
+        function dataSet() {
+            var vals = [];
+            $('input[name="selectedIds"]:checked').each(function (index, item) {
+                vals.push($(this).val());
+            });
+            if (vals.length <= 0) {
+                layer.msg('未选中任何信息!', { icon: 2, time: 3000 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['800px', '400px'],
+                shade: 0.3,
+                shadeClose: false,//默认开启遮罩关闭
+                resize: false,//默认重设大小是否
+                maxmin: true,//默认最大最小化按钮
+                scrollbar: true,//默认滚动条是否开启
+                moveType: 1,//默认拖拽模式，0或者1
+                content: "/Student/PiLiangFenBan",
+                //如果不让iframe出现滚动条，
+                //可以content: ['http://sentsin.com', 'no']
+                btn: ['确定', '关闭'],
+                yes: function (index, layero) {
+                    var res = $(layero).find("iframe")[0].contentWindow.callbackdata();
+
+                    if (res) {
+                        dicData = res;
+                        var classId ;
+                        var changeTime;
+                        $.each(dicData, function (i, field) {
+                            if (field.name == "ClassId") {
+                                classId = field.value;
+                            }
+                            if (field.name == "changeDateTime") {
+                                changeTime = field.value;
+                            }
+                        });
+                        if (dicData == null || dicData.length <= 0 || classId == null ||
+                            classId == 0 || changeTime == null || changeTime=="") {//没选择任何字段
+                            layer.msg('请选择班级及分班时间', { icon: 2, time: 3000 });
+                        }
+                        else {
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            //提交
+                            piliangfenban(vals,classId, changeTime);
+                        }
+                    }
+                    dicData = null;
+
+
+                },
+
+                cancel: function () {
+                    //右上角关闭回调
+                }
+            });
+
+            //var className = $("#classId option:selected").text();
+            //var classId = $("#classId option:selected").val();
+            //layer.confirm('确认要批量设置到' + className + '吗？', function (index) {
+            //    var formData = $("#formList").serializeArray();
+            //            $.ajax({
+            //                type: "post",
+            //                url: "/Student/AllSetClass?classId="+classId,
+            //                data: formData,
+            //                success: function (data) {
+            //                    if (data.status == "ok") {
+            //                        layer.msg('已成功设置!', { icon: 1, time: 3000 }, function () {
+            //                            location.replace(location.href);
+            //                        });
+            //                    }
+            //                    else {
+            //                        layer.msg('设置失败!'+data.errorMsg, { icon: 2, time: 3000 });
+            //                    }
+            //                },
+            //                error: function (data) {
+            //                    //alert(data.error);
+            //                    layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+            //                }
+            //           });
+            //})
+
+            
+        }
+        /*批量分班提交 */
+        function piliangfenban(vals,id,time) {
+
+            $.ajax({
+                url: "/Student/PiLiangFenBan",
+                type: "post",
+                data: { selectedIds: vals, classId: id, changeTime: time },
+                dataType: "json",
+                success: function (res) {
+                    if (res.status == "ok") {
+                        layer.msg('分班成功!', { icon: 1, time: 3000 }, function () {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        layer.msg("错误:" + res.errorMsg, { icon: 2, time: 3000 });
+                    }
+                },
+                error: function () { layer.msg("网络请求出错", { icon: 2, time: 3000 }); }
+            });
+        }
+
+        /* 留班 */
+        function stayInClass(obj, id) {
+            layer.confirm('确认要留班吗？', function (index) {
+                $.ajax({
+                    type: "post",
+                    url: "/Student/StayInClass",
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            layer.msg('已成功设置!', { icon: 1, time: 3000 }, function () {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            layer.msg('设置失败!', { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            })
+        }
+        /*批量删除*/
+        function datadel() {
+            //layer.msg('功能开发中,敬请期待!', { icon: 1, time: 3000 });
+
+            var vals = [];
+            $('input[name="selectedIds"]:checked').each(function (index, item) {
+                vals.push($(this).val());
+            });
+            if (vals.length <= 0) {
+                layer.msg('未选中任何信息!', { icon: 2, time: 3000 });
+                return;
+            }
+
+            layer.confirm('确认要批量删除吗？', function (index) {
+                var formData = $("#formList").serializeArray();
+                $.ajax({
+                    url: "/Student/PatchDel",
+                    type: "post",
+                    dataType: "json",
+                    data: formData,
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            layer.msg('已删除!', { icon: 1, time: 3000 }, function () {
+                                location.reload();//刷新页面
+                            });
+                        }
+                        else {
+                            layer.msg('删除失败!', { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            });
+        }
+
+        /*毕业*/
+        function biye(obj, id) {
+            layer.confirm('确认要毕业吗？', function (index) {
+                $.ajax({
+                    type: "post",
+                    url: "/Student/BiYe",
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            layer.msg('已成功设置!', { icon: 1, time: 3000 }, function () {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            layer.msg('设置失败!', { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        //alert(data.error);
+                        layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                    }
+                });
+            })
+        }
+        /*用户-添加*/
+        function member_add(title, url, w, h) {
+            layer_show(title, url, w, h);
+        }
+        /*用户-查看*/
+        function member_show(title, url, id, w, h) {
+            var index = layer.open({
+                type: 2,
+                content: url,
+                area: ['800px', '500px'],
+                maxmin: true,
+                title: title
+            });
+            layer.full(index);
+        }
+        /*编辑*/
+        function member_edit(title, url, id, w, h) {
+            var index = layer.open({
+                type: 2,
+                content: url,
+                area: ['800px', '500px'],
+                maxmin: true,
+                title: title
+            });
+            layer.full(index);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>忘记密码</title>
+    <link href="~/hui/css/hui.css" rel="stylesheet" />
+</head>
+<body style="background:#F4F5F6;">
+    <header class="hui-header">
+        <div id="hui-back"></div>
+        <h1>滨州市实验幼儿园信息采集</h1>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-center-title" style="margin-top:35px;"><h1 style="border:0px;">修改密码二</h1></div>
+        <div style="margin:20px 10px; margin-bottom:15px;" class="hui-form" id="form1">
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">新密码</div>
+                <input type="password" class="hui-input hui-pwd-eye" placeholder="新密码" name="pwd" checkType="string" id="pwd" checkData="6,20" checkMsg="密码为6-20个字符" />
+            </div>
+
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">确认新密码</div>
+                <input type="password" class="hui-input hui-pwd-eye" placeholder="确认新密码" name="pwd2" checkType="sameWithId" id="pwd2" checkData="pwd" checkMsg="两次密码不一致" />
+            </div>
+        </div>
+        <div style="padding:10px; padding-top:10px;">
+            <button type="button" class="hui-button hui-button-large hui-primary" id="submit">保存</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/hui/js/hui.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="~/hui/js/hui-form.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        hui.formInit();
+
+        hui('#submit').click(function () {
+            //验证
+            var res = huiFormCheck('#form1');
+            //提交
+            if (res) {
+                var data = hui.getFormData('#form1');
+                hui.ajax({
+                    type: 'POST',
+                    url: "/Home/LosePassTwo",
+                    data: data,
+                    backType :'JSON',
+                    beforeSend: function () {//请求前执行的函数
+                        hui.loading("正在提交...");
+                    },
+                    complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                        hui.closeLoading();
+                    },
+                    success: function (res) {//请求成功后执行的回调函数
+                        if (res.status == "ok") {
+                                location.replace("/Home/LosePassThree");
+
+                        } else {
+                            hui.toast(res.errorMsg, 'long');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        }
+                    },
+                    error: function (e) {//请求失败时执行的回调函数
+                        hui.iconToast('网络请求失败', 'warn');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,159 @@
+﻿@model TrainingAddViewModel
+    @{
+        Layout = null;
+    }
+
+
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <title>添加培训信息</title>
+        <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+        <link href="~/content/css/bass.css" rel="stylesheet" />
+        <link href="~/content/css/index.css" rel="stylesheet" />
+        <link href="~/content/css/mobileSelect.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div>
+            <header>
+                <div class="header">
+                    <h1>添加培训</h1>
+                    <a href="javascript:window.history.back(-1)" class="return"><i class="icon-16"></i></a>
+                </div>
+            </header>
+            <div style="height: 2.5rem;"></div>
+        </div>
+        <!--新增信息-->
+        <div class="purchase">
+            <form class="input-group" id="formAdd">
+                <input type="hidden" name="teacherId" value="@Model.TeacherId" />
+                <div class="input-row">
+                    <label>培训年度</label>
+                    <input type="text" placeholder="请输入培训年度，如 2018" name="year" required pattern="^[0-9]*$">
+                </div>
+
+                <div class="input-row">
+                    <label>培训机构</label>
+                    <input type="text" placeholder="请输入培训机构" name="unitName" required>
+                </div>
+                <div class="input-row">
+                    <label>培训项目</label>
+                    <input type="text" placeholder="请输入培训项目" name="trainingContent">
+                </div>
+                <div class="input-row">
+                    <label>培训级别</label>
+                    <input type="text" readonly="readonly" id="TrainingLevel" placeholder="请选择">
+                    <input type="hidden" readonly="readonly" name="TrainingLevelId" id="TrainingLevelId">
+                </div>
+                <div class="input-row">
+                    <label>培训形式</label>
+                    <input type="text" readonly="readonly" id="TrainingType" placeholder="请选择">
+                    <input type="hidden" readonly="readonly" name="TrainingTypeId" id="TrainingTypeId">
+                </div>
+                <div class="input-row">
+                    <label>培训学时</label>
+                    <input type="text" placeholder="请输入培训学时，如 40" name="trainingTime" required pattern="^[0-9]*$">
+                </div>
+                <button type="submit" id="btnAdd">保存</button>
+            </form>
+        </div>
+        <script src="~/content/js/jquery.min.js"></script>
+        <script src="~/content/js/jquery.validate.min.js"></script>
+        <script src="~/content/js/mobileSelect.js"></script>
+        <script src="~/content/layer/mobile/layer.js"></script>
+        <script>
+    $(document).ready(function () {
+
+        $("#formAdd").validate({
+            //验证通过后执行的方法
+            submitHandler: function() {
+                var formData = $("#formAdd").serializeArray();
+                var loading = layer.open({
+                    shadeClose: false,
+                    type: 2,
+                    content: '保存中'
+                });
+                $.ajax({
+                    url: '@Url.Action("Add","Training")',
+                    type: 'post',
+                    dataType: 'json',
+                    data: formData,
+                    beforeSend: function () {
+                        $("#btnAdd").attr({disabled:"disabled"});
+                    },
+                    complete: function() {
+                        layer.close(loading);
+                        $("#btnAdd").attr({ disabled: false });
+                    },
+                    success: function(res) {
+                        if (res.status == "ok") {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存成功',
+                                skin: 'msg',
+                                time: 3, //3秒后自动关闭
+                                end: function() {
+                                    window.location.href = "@Url.Action("List","Training")";
+                                }
+                            });
+
+                        }
+                        else {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存失败：'+res.errorMsg,
+                                skin: 'msg',
+                                time: 3 //3秒后自动关闭
+                            });
+                        }
+                    },
+                    error: function() {
+                        layer.open({
+                            shadeClose: false,
+                            content: '网络异常,请联系管理员',
+                            skin: 'msg',
+                            time: 3 //3秒后自动关闭
+                        });
+                    }
+                });
+            }
+        });
+        });
+        //培训级别
+        var trainingLevels = new MobileSelect({
+            trigger: "#TrainingLevel",
+            title: "培训级别",
+            wheels: [
+                { data: @Html.Raw(Model.TrainingLevels)}
+            ],
+            transitionEnd:function(indexArr, data){
+                //console.log(data);
+            },
+            callback:function(indexArr, data){
+                //console.log(data);
+                $("#TrainingLevel").val(data[0].value);
+                $("#TrainingLevelId").val(data[0].id);
+            }
+        });
+        //培训形式
+        var trainingTypes = new MobileSelect({
+            trigger: "#TrainingType",
+            title: "培训形式",
+            wheels: [
+                { data: @Html.Raw(Model.TrainingTypes)}
+            ],
+            transitionEnd:function(indexArr, data){
+                //console.log(data);
+            },
+            callback:function(indexArr, data){
+                //console.log(data);
+                $("#TrainingType").val(data[0].value);
+                $("#TrainingTypeId").val(data[0].id);
+            }
+        });
+        </script>
+    </body>
+</html>

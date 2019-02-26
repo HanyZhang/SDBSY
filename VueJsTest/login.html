@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div id="app">
+        <form @submit="checkForm" method="post" novalidate="true">
+
+            <p v-if="errors.length">
+                <b>Please correct the following error(s):</b>
+                <ul>
+                    <li v-for="error in errors">{{ error }}</li>
+                </ul>
+            </p>
+
+            <p>
+                <label for="name">账号</label>
+                <input type="text" name="name" id="name" v-model="name">
+            </p>
+            
+            <p>
+                <label for="password">密码</label>
+                <input id="password" v-model="password" type="password" name="password">
+            </p>
+
+
+            
+
+            <p>
+                <input type="submit" value="Submit">
+            </p>
+
+        </form>
+        
+        <p class="activ">您点击了{{ count }}次</p>
+        <button @click="addCount">点击</button>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            errors: [],
+            name: 'admin',
+            password:null,
+            count:0
+        },
+        methods: {
+            checkForm: function(e) {
+                var url = "/Account/Login";
+                this.errors = [];
+                if (!this.name) this.errors.push("Name required.");
+                else if (!this.password) this.errors.push("Password required.");
+                else {
+                    axios.post(url, { params: {name:this.name,password:this.password} })
+                        .then(res => {
+                            if (res.status == "ok") {
+                                alert("登录成功");
+                            } else {
+                                alert("登录失败");
+                            }
+                        }).cache(err => {
+                            console.log('请求失败:' + err.status + ',' + err.statusText);
+                        });
+                }
+                if (!this.errors.length) return true;
+                e.preventDefault();
+            },
+            addCount: function() {
+                this.count++;
+            },
+            validEmail: function(email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+        }
+    })
+</script>
+</body>
+</html>

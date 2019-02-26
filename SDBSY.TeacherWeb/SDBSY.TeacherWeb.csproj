@@ -1,0 +1,318 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C5F479C9-479A-43D5-9137-4D4944BC6A90}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SDBSY.TeacherWeb</RootNamespace>
+    <AssemblyName>SDBSY.TeacherWeb</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.4.0.2\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeCarvings.Piczard, Version=1.2.3.0, Culture=neutral, PublicKeyToken=88d00d4422733d60, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeCarvings.Piczard.1.2.3.3\lib\CodeCarvings.Piczard.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="content\css\bass.css" />
+    <Content Include="content\css\DateTimePicker.css" />
+    <Content Include="content\css\index.css" />
+    <Content Include="content\css\mobileSelect.css" />
+    <Content Include="content\fonts\icomoon.svg" />
+    <Content Include="content\fonts\iconfont.css" />
+    <Content Include="content\images\act1.jpg" />
+    <Content Include="content\images\add-img.png" />
+    <Content Include="content\images\add.png" />
+    <Content Include="content\images\bhc1.jpg" />
+    <Content Include="content\images\bhc2.jpg" />
+    <Content Include="content\images\bhc3.jpg" />
+    <Content Include="content\images\bt1.png" />
+    <Content Include="content\images\bt2.png" />
+    <Content Include="content\images\bt3.png" />
+    <Content Include="content\images\default-img.jpg" />
+    <Content Include="content\images\dly.jpg" />
+    <Content Include="content\images\dt1.jpg" />
+    <Content Include="content\images\dt2.jpg" />
+    <Content Include="content\images\dt3.jpg" />
+    <Content Include="content\images\dt4.jpg" />
+    <Content Include="content\images\dtt.jpg" />
+    <Content Include="content\images\Frjbg.jpg" />
+    <Content Include="content\images\fs1.jpg" />
+    <Content Include="content\images\fs2.jpg" />
+    <Content Include="content\images\gy1.jpg" />
+    <Content Include="content\images\gy2.jpg" />
+    <Content Include="content\images\gy3.jpg" />
+    <Content Include="content\images\gy4.jpg" />
+    <Content Include="content\images\hd1.jpg" />
+    <Content Include="content\images\hd2.jpg" />
+    <Content Include="content\images\icon-apply.png" />
+    <Content Include="content\images\icon-bj.png" />
+    <Content Include="content\images\icon-gq.png" />
+    <Content Include="content\images\j-banner02.jpg" />
+    <Content Include="content\images\j-banner03.jpg" />
+    <Content Include="content\images\j-banner04.jpg" />
+    <Content Include="content\images\logo-caiyunhui.png" />
+    <Content Include="content\images\logo00.png" />
+    <Content Include="content\images\nyfw.png" />
+    <Content Include="content\images\pass1.jpg" />
+    <Content Include="content\images\pass2.jpg" />
+    <Content Include="content\images\user-img2.png" />
+    <Content Include="content\images\user-img3.png" />
+    <Content Include="content\images\user-img4.png" />
+    <Content Include="content\js\custom.js" />
+    <Content Include="content\js\DateTimePicker.js" />
+    <Content Include="content\js\iscroll.js" />
+    <Content Include="content\js\jquery.min.js" />
+    <Content Include="content\js\jquery.validate.min.js" />
+    <Content Include="content\js\mobileSelect.js" />
+    <Content Include="content\js\mobileSelect.min.js" />
+    <Content Include="content\js\zepto.kslider.js" />
+    <Content Include="content\js\zepto.min.js" />
+    <Content Include="content\js\zepto.scroll.js" />
+    <Content Include="content\layer\layer.js" />
+    <Content Include="content\layer\mobile\layer.js" />
+    <Content Include="content\layer\mobile\need\layer.css" />
+    <Content Include="content\layer\theme\default\icon-ext.png" />
+    <Content Include="content\layer\theme\default\icon.png" />
+    <Content Include="content\layer\theme\default\layer.css" />
+    <Content Include="content\layer\theme\default\loading-0.gif" />
+    <Content Include="content\layer\theme\default\loading-1.gif" />
+    <Content Include="content\layer\theme\default\loading-2.gif" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminHelper.cs" />
+    <Compile Include="App_Start\CheckLoginAttribute.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\TeacherWebAuthorizeFilter.cs" />
+    <Compile Include="App_Start\TeacherWebExceptionFilter.cs" />
+    <Compile Include="App_Start\ValidateFileAttribute.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CertificateController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\TeacherController.cs" />
+    <Compile Include="Controllers\TrainingController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CertificateAddPostModel.cs" />
+    <Compile Include="Models\CertificateAddViewModel.cs" />
+    <Compile Include="Models\CertificateEditPostModel.cs" />
+    <Compile Include="Models\CertificateEditViewModel.cs" />
+    <Compile Include="Models\CertificateListViewModel.cs" />
+    <Compile Include="Models\InvoiceAddPostModel.cs" />
+    <Compile Include="Models\InvoiceAddViewModel.cs" />
+    <Compile Include="Models\InvoiceEditPostModel.cs" />
+    <Compile Include="Models\InvoiceEditViewModel.cs" />
+    <Compile Include="Models\InvoiceListViewModel.cs" />
+    <Compile Include="Models\SigninPostModel.cs" />
+    <Compile Include="Models\SignupPostModel.cs" />
+    <Compile Include="Models\TeacherAddPostModel.cs" />
+    <Compile Include="Models\TeacherAddViewModel.cs" />
+    <Compile Include="Models\TeacherEditPostModel.cs" />
+    <Compile Include="Models\TeacherEditViewModel.cs" />
+    <Compile Include="Models\TrainingAddPostModel.cs" />
+    <Compile Include="Models\TrainingAddViewModel.cs" />
+    <Compile Include="Models\TrainingEditPostModel.cs" />
+    <Compile Include="Models\TrainingEditViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="content\fonts\icomoon.eot" />
+    <Content Include="content\fonts\icomoon.ttf" />
+    <Content Include="content\fonts\icomoon.woff" />
+    <None Include="packages.config" />
+    <Content Include="Views\Account\Signin.cshtml" />
+    <Content Include="Views\Account\Signup.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Teacher\Add.cshtml" />
+    <Content Include="Views\Teacher\Edit.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Certificate\List.cshtml" />
+    <Content Include="Views\Certificate\Add.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Training\List.cshtml" />
+    <Content Include="Views\Training\Add.cshtml" />
+    <Content Include="Views\Training\Edit.cshtml" />
+    <Content Include="Views\Certificate\Edit.cshtml" />
+    <Content Include="Views\Account\ResetPwdOne.cshtml" />
+    <Content Include="Views\Account\ResetPwdOK.cshtml" />
+    <Content Include="Views\Account\ResetPwdTwo.cshtml" />
+    <Content Include="Views\Invoice\List.cshtml" />
+    <Content Include="Views\Invoice\Add.cshtml" />
+    <Content Include="Views\Invoice\Edit.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SDBSY.Common\SDBSY.Common.csproj">
+      <Project>{c75a1183-be02-48c6-9d26-95edee13e963}</Project>
+      <Name>SDBSY.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBSY.DTO\SDBSY.DTO.csproj">
+      <Project>{f5384f06-81cd-4f4c-bf2b-91902ccc49f3}</Project>
+      <Name>SDBSY.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBSY.IService\SDBSY.IService.csproj">
+      <Project>{a0b27d07-9192-4d8e-b3bc-9d58e1190124}</Project>
+      <Name>SDBSY.IService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBSY.Service\SDBSY.Service.csproj">
+      <Project>{73934493-64dd-4d4d-ba96-2653e22fb262}</Project>
+      <Name>SDBSY.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55812</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:64784/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

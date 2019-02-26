@@ -1,0 +1,81 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>添加食材</title>
+    <link rel="stylesheet" type="text/css" href="~/hui/css/hui.css" />
+</head>
+<body style="background:#FCFCFC;">
+    <header class="hui-header">
+        <div id="hui-back"></div>
+        <h1>添加食材</h1>
+    </header>
+    <div class="hui-wrap">
+        <form style="padding:28px 10px;" class="hui-form" id="form1">
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">食材名称</div>
+                <input type="text" class="hui-input hui-input-clear" name="name" placeholder="食材名称" checkType="string" checkData="1," checkMsg="食材名称最少1个字符" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">单位</div>
+                <input type="text" class="hui-input hui-input-clear" placeholder="计量单位，如：斤、袋" name="unit" checkType="string" checkData="1," checkMsg="单位最少1个字符" />
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">供货商家</div>
+                <input type="text" name="supplier" class="hui-input hui-input-clear" placeholder="供货商家" />
+            </div>
+           
+            <div style="padding:15px 8px;">
+                <button type="button" class="hui-button hui-primary hui-fr" id="submitBtn">保存</button>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="~/hui/js/hui.js"></script>
+    <script type="text/javascript" src="~/hui/js/hui-form.js"></script>
+    <script type="text/javascript">
+        hui.formInit();
+        //表单元素数据收集演示
+        hui('#submitBtn').click(function () {
+            //验证
+            var res = huiFormCheck('#form1');
+            if (res) {
+                var data = hui.getFormData('#form1');
+                hui.ajax({
+                    type: 'POST',
+                    url: "/Mobile/FoodAdd",
+                    data: data,
+                    backType: 'JSON',
+                    beforeSend: function () {//请求前执行的函数
+                        hui.loading("数据保存中...");
+                    },
+                    complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                        hui.closeLoading();
+                    },
+                    success: function (res) {//请求成功后执行的回调函数
+                        if (res.status == "ok") {
+                            hui.toast("保存成功", 'long');
+                            setTimeout(function () {
+                                location.replace("/Mobile/FoodList");
+                            }, 2000);
+
+                        } else {
+                            hui.toast(res.errorMsg, 'long');
+                        }
+                    },
+                    error: function (e) {//请求失败时执行的回调函数
+                        hui.iconToast('网络请求失败', 'warn');
+                    }
+                });
+            }
+            
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+﻿@model TeacherIndexViewModel
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="~/content/lib/html5.js"></script>
+    <script type="text/javascript" src="~/content/lib/respond.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="~/content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>教师信息</title>
+</head>
+<body onload="loadRadio()">
+    <div class="pd-20">
+        <form action="" method="post" class="form form-horizontal">
+            <div class="row cl">
+                <label class="form-label col-3">姓名：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.Name" placeholder="" id="name" name="name" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">性别：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="gender-1" value="False" name="gender">
+                        <label for="gender-1">男</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="gender-2" value="True" name="gender">
+                        <label for="gender-2">女</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">出生日期：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.BirthDay.ToShortDateString()"
+                           id="BirthDate" name="BirthDate" readonly />
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">联系电话：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.TelPhone" placeholder="" id="phone" name="phone" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">证件类型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("IdCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Teacher.IdCardTypeId), new { @class = "select", disabled = "disabled" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">证件号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.IdCardNum" placeholder="" id="IdCardNum" name="IdCardNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">毕业学校：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.SchoolName" placeholder="" id="SchoolName" name="SchoolName" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">最高学历：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.HighestEducationName" placeholder="" id="HighestEducation" name="HighestEducation" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">联系地址：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.HomePlace" placeholder="" id="HomePlace" name="HomePlace" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">来园工作日期：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.ComeDateStr"
+                           id="comeDate" name="comeDate" readonly />
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">职工类型：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.TeacherTypeName" placeholder="" id="TeacherType" name="TeacherType" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">任职岗位：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.PostTypeName" placeholder="" id="PostType" name="PostType" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否园长资格：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsLeader-1" value="False" name="IsLeader">
+                        <label for="IsLeader-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsLeader-2" value="True" name="IsLeader">
+                        <label for="IsLeader-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">园长资格认证单位：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.LeaderAuthUnit" placeholder="" id="LeaderAuthUnit" name="LeaderAuthUnit" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否幼教专业：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsPreschoolEducation-1" value="False" name="IsPreschoolEducation">
+                        <label for="IsPreschoolEducation-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsPreschoolEducation-2" value="True" name="IsPreschoolEducation">
+                        <label for="IsPreschoolEducation-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">职称：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.ZhiChengName" placeholder="" id="ZhiCheng" name="zhicheng" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">教师类型：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.EmployTypeName" placeholder="" id="EmployType" name="EmployType" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">基本工资：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.BasePay" placeholder="" id="basePay" name="basePay" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">养老保险：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsYangLao-1" value="False" name="IsYangLao">
+                        <label for="IsYangLao-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsYangLao-2" value="True" name="IsYangLao">
+                        <label for="IsYangLao-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">医疗保险：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsYiLiao-1" value="False" name="IsYiLiao">
+                        <label for="IsYiLiao-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsYiLiao-2" value="True" name="IsYiLiao">
+                        <label for="IsYiLiao-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">失业保险：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsShiYe-1" value="False" name="IsShiYe">
+                        <label for="IsShiYe-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsShiYe-2" value="True" name="IsShiYe">
+                        <label for="IsShiYe-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">工伤保险：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsGongShang-1" value="False" name="IsGongShang">
+                        <label for="IsGongShang-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsGongShang-2" value="True" name="IsGongShang">
+                        <label for="IsGongShang-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">生育保险：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsShengYu-1" value="False" name="IsShengYu">
+                        <label for="IsShengYu-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsShengYu-2" value="True" name="IsShengYu">
+                        <label for="IsShengYu-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">住房公积金：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsGongJiJin-1" value="False" name="IsGongJiJin">
+                        <label for="IsGongJiJin-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsGongJiJin-2" value="True" name="IsGongJiJin">
+                        <label for="IsGongJiJin-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">任职开始日期：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.WorkStartTimeStr"
+                           id="workStartTime" name="workstarttime" readonly />
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">任职结束日期：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.WorkEndTimeStr"
+                           id="workEndTime" name="workendtime" readonly />
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否取得教师资格证：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="HasTeacherCard-1" value="False" name="HasTeacherCard">
+                        <label for="HasTeacherCard-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="HasTeacherCard-2" value="True" name="HasTeacherCard">
+                        <label for="HasTeacherCard-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">教师资格证类型：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Teacher.TeacherCardTypeName" placeholder="" id="TeacherCardType" name="TeacherCardType" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            
+        <div class="row cl">
+            <label class="form-label col-3">教师资格证号码：</label>
+            <div class="formControls col-5">
+                <input type="text" class="input-text" value="@Model.Teacher.TeacherCardNum" placeholder="" id="TeacherCardNum" name="TeacherCardNum" readonly>
+            </div>
+            <div class="col-4"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">证书颁发机构：</label>
+            <div class="formControls col-5">
+                <input type="text" class="input-text" value="@Model.Teacher.TeacherCardAwardUnit" placeholder="" id="TeacherCardAwardUnit" name="TeacherCardAwardUnit" readonly>
+            </div>
+            <div class="col-4"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">证书颁发日期：</label>
+            <div class="formControls col-5">
+                <input type="text" class="input-text" value="@Model.Teacher.TeacherCardAwardTimeStr" placeholder="" id="TeacherCardAwardTime" name="TeacherCardAwardTime" readonly>
+            </div>
+            <div class="col-4"> </div>
+        </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否党员：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsPartyMember-1" value="False" name="IsPartyMember">
+                        <label for="IsPartyMember-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsPartyMember-2" value="True" name="IsPartyMember">
+                        <label for="IsPartyMember-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="~/content/lib/icheck/jquery.icheck.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/Validform/5.3.2/Validform.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.admin.js"></script>
+    <script type="text/javascript">
+        function loadRadio() {
+            //加载radio的选中样式
+            var gender= '@(Model.Teacher.Gender)' ;
+            var isPartyMember = '@(Model.Teacher.IsPartyMember)';
+            var isLeader = '@Model.Teacher.IsLeader';
+            var isPreschoolEducation = '@Model.Teacher.IsPreschoolEducation';
+            var isYangLao = '@Model.Teacher.IsYangLao';
+            var isYiLiao = '@Model.Teacher.IsYiLiao';
+            var isShiYe = '@Model.Teacher.IsShiYe';
+            var isGongShang = '@Model.Teacher.IsGongShang';
+            var isShengYu = '@Model.Teacher.IsShengYu';
+            var isGongJiJin = '@Model.Teacher.IsGongJiJin';
+            var hasTeacherCard = '@Model.Teacher.HasTeacherCard';
+            
+            var radios= $("input[name=gender]");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val()==gender) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+            
+            radios = $("input[name=IsPartyMember]");
+            for (i = 0; i < radios.length; i++) {
+                if  (radios.eq(i).val() == isPartyMember) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+            radios = $(":radio[name='IsLeader']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isLeader) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsPreschoolEducation']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isPreschoolEducation) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsYangLao']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isYangLao) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+
+            radios = $(":radio[name='IsYiLiao']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isYiLiao) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsShiYe']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isShiYe) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsShengYu']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isShengYu) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsGongShang']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isGongShang) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsGongJiJin']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isGongJiJin) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='HasTeacherCard']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == hasTeacherCard) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+        }
+        
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>忘记密码</title>
+    <link href="~/hui/css/hui.css" rel="stylesheet" />
+</head>
+<body style="background:#F4F5F6;">
+    <header class="hui-header">
+        <h1>滨州市实验幼儿园信息采集</h1>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-center-title" style="margin-top:35px;"><h1 style="border:0px;">修改密码一</h1></div>
+        <div style="margin:20px 10px; margin-bottom:15px;" class="hui-form" id="form1">
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">手机号</div>
+                <input type="text" class="hui-input hui-input-clear" placeholder="手机号" id="phoneNum" name="phoneNum" checkType="phone" checkMsg="填写正确的手机号" />
+            </div>
+
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">图形验证码</div>
+                <input type="text" class="hui-input" placeholder="图形验证码" id="loginCaptcha" name="loginCaptcha" value="" checkType="reg" checkData="^[A-Za-z0-9]{4}$" checkMsg="图形验证码必填" />
+                <div style="width:120px;">
+                    <img src="~/Home/CreateCaptcha" id="imgVerifyCode" width="100%" />
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">短信验证码</div>
+                <input type="text" class="hui-input" placeholder="短信验证码" name="smsVerifyCode" checkType="reg" id="smsVerifyCode" checkData="^[0-9]{6}$" checkMsg="短信验证码为6位数字" />
+                <div style="width:120px;">
+                    <button type="button" class="hui-button" id="btnSMS">发送</button>
+                </div>
+            </div>
+        </div>
+        <div style="padding:10px; padding-top:10px;">
+            <button type="button" class="hui-button hui-button-large hui-primary" id="submit">下一步</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/hui/js/hui.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="~/hui/js/hui-form.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        hui.formInit();
+        hui("#imgVerifyCode").click(function () {
+            hui("#imgVerifyCode").attr("src", "/Home/CreateCaptcha?t=" + Math.random());
+        });
+        hui("#imgVerifyCode").click();//避免部分浏览器刚打开时加载上次的缓存验证码
+
+        //获取短信验证码
+        hui('#btnSMS').click(function () {
+            var btn = hui('#btnSMS');
+
+            var imgCaptcha = hui('#loginCaptcha').val();
+            if (imgCaptcha == null || imgCaptcha.length<=0) {
+                hui.toast("图形验证码必填", 'long');
+                return;
+            }
+            var phone = hui('#phoneNum').val();
+            if (phone == null || phone.length != 11) {
+                hui.toast("请填写正确的手机号码", 'long');
+                return;
+            }
+            
+            
+
+            hui.ajax({
+                type: 'POST',
+                url: '/Home/SendSms',
+                data: { imgCaptcha: imgCaptcha, phoneNum: phone },
+                backType: 'JSON',
+                beforeSend: function () {//请求前执行的函数
+                    hui.loading("正在发送...");
+                },
+                complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                    hui.closeLoading();
+                },
+                success: function (res) {//请求成功后执行的回调函数
+                    if (res.status == "ok") {
+                        hui.toast('短信发送成功');
+                        var remainSecond = 30;
+                        var intervalId = setInterval(function () {
+                            remainSecond--;
+                            if (remainSecond <= 0) {
+                                btn.html("发送").attr("disabled", false);
+                                clearInterval(intervalId);
+                            }
+                            else {
+                                btn.html(remainSecond).attr("disabled", true);
+
+                            }
+                        }, 1000);
+
+                    } else {
+                        hui.toast("错误:"+res.errorMsg, 'long');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    }
+
+                },
+                error: function (e) {//请求失败时执行的回调函数
+                    hui.iconToast('网络请求失败', 'warn');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                }
+            });
+
+        });
+
+
+        hui('#submit').click(function () {
+            //验证
+            var res = huiFormCheck('#form1');
+            //提交
+            if (res) {
+                //hui.iconToast('验证通过！');
+                var data = hui.getFormData('#form1');
+                hui.ajax({
+                    type: 'POST',
+                    url: "/Home/LosePass",
+                    data: data,
+                    backType: 'JSON',
+                    beforeSend: function () {//请求前执行的函数
+                        hui.loading("正在校验...");
+                    },
+                    complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                        hui.closeLoading();
+                    },
+                    success: function (res) {//请求成功后执行的回调函数
+                        if (res.status == "ok") {
+                            //hui.toast("短信验证码校验成功");
+                            setTimeout(function () {
+                                location.replace("/Home/LosePassTwo");
+                            }, 2000);
+
+                        } else {
+                            hui.toast(res.errorMsg, 'long');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        }
+                    },
+                    error: function (e) {//请求失败时执行的回调函数
+                        hui.iconToast('网络请求失败', 'warn');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+

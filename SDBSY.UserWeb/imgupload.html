@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>图片选择</title>
+    <link rel="stylesheet" type="text/css" href="./hui/css/hui.css" />
+</head>
+<body>
+    <header class="hui-header">
+        
+        <h1>图片选择</h1>
+    </header>
+    <div class="hui-wrap">
+        <div id="hui-img-cuter-select">
+            <div id="hui-img-cuter-t1">+</div>
+            <div id="hui-img-cuter-t2">请选择图片</div>
+        </div>
+        <input type="hidden" class="input-text" value="" name="imageUrl" id="imageUrl">
+    </div>
+    <div id="hui-footer">
+        <button type="button" class="hui-button hui-primary hui-fr" style="margin:2px 8px 0px 0px;" id="uploadBtn">保存照片</button>
+    </div>
+    <script type="text/javascript" src="./hui/js/hui.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="./hui/js/hui-image-cuter.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        //获取需上传图片类型photo、tijian
+        function gettype() {
+            var str = window.location.search.substr(1);
+            var strs = {};
+            var item = null;
+            if (str.length > 0) {
+                if (str.split("=")[0]=="type")
+               item=str.split("=")[1];
+            }
+            return item;
+        }
+        
+            
+        
+
+        /*
+        huiImgCuter 参数
+        1. 宽度和高度的比例 高度 / 宽度 默认 1
+        2. 最终保存图片的宽度 默认 200px 高度根据宽高比自动调整
+        */
+        var cuter = new huiImgCuter(0.75,500);
+        //绑定底部的选择按钮
+        cuter.bindSelect("#selectImgBtn");
+        //保存照片
+        hui('#uploadBtn').click(function () {
+            //获取图片数据
+            var imgData = cuter.getImgData();
+            if (!imgData) { hui.toast('请选择图片'); return; }
+            var stype = gettype();
+            //上传到服务端代码
+            hui.ajax({
+                type: 'POST',
+                url: "/Home/UploadFileAsync?type=" + stype,
+                data: { base64string: imgData, path: "sdbsy" },
+                backType: 'JSON',
+                beforeSend: function () {//请求前执行的函数
+                    hui.loading('上传照片...');
+                },
+                complete: function () {//请求完成执行的函数，不论成功失败都会执行
+                    hui.closeLoading();
+                },
+                success: function (msg) {//请求成功后执行的回调函数
+                    if (msg.status == "ok") {
+                        hui.toast('照片上传成功!');
+                        hui("#imageUrl").val(msg.data);
+                        var type = gettype();
+                        var url = hui("#imageUrl").val();
+                        var useragent = navigator.userAgent;
+                        if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {//不是微信浏览器
+                            window.opener.document.getElementById(type + "Url").value = url;
+                            var ddd = window.opener.document.getElementById(type);
+                            var img = window.opener.document.getElementById(type + "Img");
+                            if (img == null) {
+                                ddd.innerHTML += '<img id="' + type + 'Img" src="' + url + '">';
+                            } else {
+                                img.src = url;
+                            }
+                            setTimeout(function () {
+                                window.close();
+                            }, 2000);
+                        } else {//微信浏览器---存cookies
+                            var date = new Date();
+                            date.setTime(date.getTime() + 5 * 60 * 1000); //设置date为当前时间+5分
+                            window.document.cookie = type + "=" + url + ";expires=" + date.toGMTString(); //将date赋值给expires
+                            setTimeout(function () {
+                                window.history.back(-1);
+                            }, 2000);
+                        }
+                    } else if (msg.status == "redirect") {
+                        hui.toast(msg.errorMsg);
+                        window.location.href = msg.data;
+                    }
+                    else {
+                        hui.toast('照片上传失败!');
+                    }
+                },
+                error: function (e) {//请求失败时执行的回调函数
+                    hui.toast('网络请求失败');
+                }
+            });
+            
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+﻿@model SystemSettingDTO[]
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="~/content/lib/html5.js"></script>
+    <script type="text/javascript" src="~/content/lib/respond.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="~/content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>系统设置</title>
+</head>
+<body>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统管理 <span class="c-gray en">&gt;</span> 系统设置 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="pd-20">
+        <form action="" method="post" class="form form-horizontal" id="object-add">
+            <div id="tab-system" >
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="row cl">
+                            <label class="form-label col-3">@item.Discription：</label>
+                            <div class="formControls col-5">
+                                <input type="text" class="input-text" value="@item.Value" placeholder="开启请设置为'ON'" id="@item.Name" name="@item.Name">
+                            </div>
+                            <div class="col-4"> </div>
+                        </div>
+                    }
+                
+            </div>
+            <div class="row cl">
+                <div class="col-10 col-offset-2">
+                    <input class="btn btn-primary radius" id="btnSave" type="button" value="&nbsp;&nbsp;保存&nbsp;&nbsp;">
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="~/content/lib/icheck/jquery.icheck.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/Validform/5.3.2/Validform.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.admin.js"></script>
+    <script type="text/javascript">
+        var flag = false;
+        $(function () {
+
+
+
+            var validForm = $("#object-add").Validform({ tiptype: 2 });
+
+            $("#btnSave").click(function () {
+                if (validForm.check(false)) {
+                    formSub();
+                }
+            });
+            var formSub = function () {
+                var formData = $("#object-add").serializeArray();
+                $.ajax({
+                    url: "/System/Index",
+                    type: "post",
+                    data: formData,
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.status == "ok") {
+                            layer.msg("保存成功", { icon: 1, time: 3000 }, function () {
+                                location.href = "/System/Index";
+                            });
+                        }
+                        else {
+                            layer.msg("错误:" + res.errorMsg, { icon: 2, time: 3000 });
+                        }
+                    },
+                    error: function () { layer.msg("网络请求出错", { icon: 2, time: 3000 }); }
+                });
+            }
+            /*
+            $("#IdCardNum").blur(function () {//手机号查重
+                var idCardNum = $(this).val();
+                if (idCardNum.length <= 0) return;
+                $.ajax({
+                    url: "/Main/CheckIdCardNum", dataType: "json", type: "post",
+                    data: { idCardNum: idCardNum },
+                    success: function (res) {
+                        if (res.status == "exists") {
+                            layer.msg('这个证件号码已经被使用', { icon: 2, time: 2000 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络请求失败!', { icon: 2, time: 2000 });
+                    }
+                });
+            });
+            */
+            $("#form-admin-add").Validform({
+                tiptype: 2,
+                callback: function (form) {
+                    form[0].submit();
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    parent.layer.close(index);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

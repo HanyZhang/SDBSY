@@ -1,0 +1,240 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>修改密码</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <header>
+            <div class="header">
+                <h1>修改密码</h1>
+                <a href="javascript:window.history.back(-1);" class="return"><i class="icon-16"></i></a>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <!--修改密码-->
+    <div class="register reset-password">
+        <form action="#" method="post" id="formResetPwd" class="input-group register-group">
+            <div class="input-row reset-p">
+                <label><i class="icon-uniE938"></i></label>
+                <input type="text" placeholder="手机号码" name="phoneNum" id="phoneNum" required pattern="^(13[0-9]|15[0|1|2|3|5|6|7|8|9]|17[7|8]|18[0|1|2|3|5|6|7|8|9]|19[8|9])\d{8}$">
+            </div>
+            <div class="input-row reset-p">
+                <label><i class="icon-uniE969"></i></label>
+                <input class="code-in" type="text" placeholder="图形验证码" name="captcha" id="captcha">
+                <img class="code-img" id="imgVerifyCode" style="width: 80px" />
+            </div>
+            <div class="input-row reset-p">
+                <label><i class="icon-uniE937"></i></label>
+                <input class="code-in" type="text" placeholder="短信验证码" name="smsCode" id="smsCode">
+                <a class="code-a btn" id="btnSMS" href="#">获取验证码</a>
+            </div>
+            <button type="submit" class="btn cy-btn reset-p-a" id="btnSave">下一步</button>
+        </form>
+    </div>
+    <!--修改密码end-->
+    <script src="~/content/js/jquery.min.js"></script>
+    <script src="~/content/js/jquery.validate.min.js"></script>
+    <script src="~/content/layer/mobile/layer.js"></script>
+    <script>
+    $(function() {
+        $("#imgVerifyCode").click(function () {
+            $("#imgVerifyCode").attr("src", "/Account/CreateCaptcha?t=" + Math.random());
+        });
+        $("#imgVerifyCode").click();//避免部分浏览器刚打开时加载上次的缓存验证码
+        //获取短信验证码
+        var flag = 1;
+        $("#btnSMS").click(function () {
+            if (flag == 1) {
+                
+            var btn = $('#btnSMS');
+            var phoneNum = $("#phoneNum").val();
+            if (phoneNum == null || phoneNum.length <= 0) {
+                layer.open({
+                    shadeClose: false,
+                    content: '请输入手机号码',
+                    skin: 'msg',
+                    time: 3 //3秒后自动关闭
+                });
+                return;
+            }
+            var captchaStr = $("#captcha").val();
+            if (captchaStr == null || captchaStr.length <= 0) {
+                layer.open({
+                    shadeClose: false,
+                    content: '请输入图形验证码',
+                    skin: 'msg',
+                    time: 3 //3秒后自动关闭
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "/Account/SendSms",
+                type: "POST",
+                dataType: "json",
+                data: { captcha: captchaStr,phoneNum:phoneNum},
+                success: function (res) {
+                    if (res.status == "ok") {
+                         layer.open({
+                             shadeClose: false,
+                             content: '短信验证码发送成功',
+                             skin: 'msg',
+                             time: 3 //3秒后自动关闭
+
+                              //end: function() {
+                               //  window.location.href = ;
+                             //}
+
+                        });
+                        var remainSecond = 30;
+                        var intervalId = setInterval(function () {
+                            remainSecond--;
+                            if (remainSecond <= 0) {
+                                //btn.html("获取验证码").removeAttr("disabled");
+                                btn.html("获取验证码").attr("id", "btnSMS");
+                                flag = 1;
+                                clearInterval(intervalId);
+                            }
+                            else {
+                                //btn.html(remainSecond + "秒后重发").attr({ disabled: "true" });
+                                flag = 0;
+                                btn.html(remainSecond + "秒后重发").attr("id", "btnNoSMS");
+                            }
+                        }, 1000);
+
+                     } else {
+                         layer.open({
+                             shadeClose: false,
+                             content: '短信验证码发送失败：'+res.errorMsg,
+                             skin: 'msg',
+                             time: 3,//3秒后自动关闭
+                             end: function() {
+                                 $("#imgVerifyCode").click();
+                             }
+                         });
+
+                     }
+
+                 },
+                 error: function() {
+                     layer.open({
+                         shadeClose: false,
+                         content: '网络异常',
+                         skin: 'msg',
+                         time: 3, //3秒后自动关闭
+                         end: function() {
+                             $("#imgVerifyCode").click();
+                         }
+                     });
+
+                 }
+            });
+                }
+        });
+        $("#formResetPwd").validate({
+            //验证规则
+            rules: {
+                phoneNum: {
+                    required: true
+                },
+                smsCode: {
+                    required:true
+                }
+
+            },
+            // 验证消息
+            messages: {
+                phoneNum: {
+                    required: '请输入手机号'
+                },
+                smsCode: {
+                    required: '请输入短信验证码'
+                }
+            },
+            // 错误消息提示
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            },
+            //验证通过后提交事件
+                submitHandler: function (form) {
+                    var formData = $("#formResetPwd").serializeArray();
+                    var loading = layer.open({
+                        shadeClose: false,
+                        type: 2,
+                        content: '加载中'
+                    });
+                    $.ajax({
+                        url: "/Account/ResetPwdOne",
+                        type: "POST",
+                        dataType: "json",
+                        data: formData,
+                        beforeSend: function () {
+                            $("#btnSave").attr({disabled:"disabled"});
+
+                        },
+                        complete: function() {
+                            layer.close(loading);
+                            $("#btnSave").attr({ disabled: false });
+                        },
+                        success: function (res) {
+                            if (res.status == "ok") {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '验证成功',
+                                    skin: 'msg',
+                                    time: 3, //3秒后自动关闭
+                                    end: function() {
+                                        window.location.href = "@Url.Action("ResetPwdTwo","Account")";
+                                    }
+                                });
+
+                            } else {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '验证失败：'+res.errorMsg,
+                                    skin: 'msg',
+                                    time: 3,//3秒后自动关闭
+                                    end: function() {
+                                        $("#imgVerifyCode").click();
+                                    }
+                                });
+
+                            }
+
+                        },
+                        error: function() {
+                            layer.open({
+                                shadeClose: false,
+                                content: '网络异常',
+                                skin: 'msg',
+                                time: 3, //3秒后自动关闭
+                                end: function() {
+                                    $("#imgVerifyCode").click();
+                                }
+                            });
+
+                        }
+                    });
+                }
+        });
+    });
+    </script>
+</body>
+</html>
+

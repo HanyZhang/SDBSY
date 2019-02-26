@@ -1,0 +1,193 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>登录</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="head-login">
+            <div class="logo">
+                <img src="~/content/images/logo00.png">
+                <p>教师版</p>
+            </div>
+        </div>
+        <div class="login">
+            <form id="formLogin" action="" method="post" class="input-group register-group">
+                <div class="input-row">
+                    <label><i class="icon-uniE938"></i></label>
+                    <input type="text" placeholder="手机号码" name="account" pattern="^(13[0-9]|15[0|1|2|3|5|6|7|8|9]|17[7|8]|18[0|1|2|3|5|6|7|8|9]|19[8|9])\d{8}$">
+                </div>
+                <div class="input-row">
+                    <label><i class="icon-uniE937"></i></label>
+                    <input type="password" placeholder="密码" name="password">
+                </div>
+                <div class="input-row">
+                    <label><i class="icon-uniE969"></i></label>
+                    <input class="code-in" type="text" placeholder="验证码" name="captcha">
+                    <img class="code-img" id="imgVerifyCode" style="width: 80px" />
+                </div>
+                <button type="submit" class="btn cy-btn btn-red" id="btnLogin">登录</button>
+            </form>
+            <div class="login-reg">
+                <a class="reg-left" href="/Account/ResetPwdOne">忘记密码?</a>
+                <a class="reg-right" href="/Account/Signup">注册账号</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入js资源 -->
+
+    <script src="~/content/js/jquery.min.js"></script>
+    <script src="~/content/js/jquery.validate.min.js"></script>
+    <script src="~/content/layer/mobile/layer.js"></script>
+    <script language="javascript">
+        function kaifa() {
+            layer.open({
+                shadeClose: false,
+                content: '功能开发中。。。',
+                skin: 'msg',
+                time: 3 //3秒后自动关闭
+            });
+        }
+        $(document).ready(function () {
+            
+            $("#imgVerifyCode").click(function () {
+                $("#imgVerifyCode").attr("src", "/Account/CreateCaptcha?t=" + Math.random());
+            });
+            $("#imgVerifyCode").click();//避免部分浏览器刚打开时加载上次的缓存验证码
+
+            $("#formLogin").validate({
+                //验证规则
+                rules: {
+                    account: {
+                        required: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 20
+                    },
+                    captcha: {
+                        required: true
+                    }
+                },
+                // 验证消息
+                messages: {
+                    account: {
+                        required: '请输入账号'
+                    },
+                    password: {
+                        required: '请输入密码'
+                    },
+                    captcha: {
+                        required: '请输入验证码'
+                    }
+                },
+
+                // 错误消息提示
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                },
+                //验证通过后提交事件
+                submitHandler: function (form) {
+                    var formData = $("#formLogin").serializeArray();
+                    var loading = layer.open({
+                        shadeClose: false,
+                        type: 2,
+                        content: '登录中'
+                    });
+                    $.ajax({
+                        url: "/Account/Signin",
+                        type: "POST",
+                        dataType: "json",
+                        data: formData,
+                        beforeSend: function () {
+                            $("#btnLogin").attr({disabled:"disabled"});
+                            
+                        },
+                        complete: function() {
+                            layer.close(loading);
+                            $("#btnLogin").attr({ disabled: false });
+                        },
+                        success: function (res) {
+                            if (res.status == "ok") {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '登录成功,正在跳转...',
+                                    skin: 'msg',
+                                    time: 3, //3秒后自动关闭
+                                    end: function() {
+                                        window.location.href = "@Url.Action("Index","Home")";
+                                    }
+                                });
+                                
+                            } else {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '登录失败：'+res.errorMsg,
+                                    skin: 'msg',
+                                    time: 3,//3秒后自动关闭
+                                    end: function() {
+                                        $("#imgVerifyCode").click();
+                                    }
+                                });
+                                
+                            }
+                            
+                        },
+                        error: function() {
+                            layer.open({
+                                shadeClose: false,
+                                content: '网络异常',
+                                skin: 'msg',
+                                time: 3, //3秒后自动关闭
+                                end: function() {
+                                    $("#imgVerifyCode").click();
+                                }
+                            });
+                            
+                        }
+                    });
+                }
+            });
+            
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

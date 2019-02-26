@@ -1,0 +1,490 @@
+﻿@model TeacherEditViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>个人信息</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <link href="~/content/css/mobileSelect.css" rel="stylesheet" />
+    <link href="~/content/css/DateTimePicker.css" rel="stylesheet" />
+</head>
+<body onload="loadRadio()">
+    <div>
+        <header class="indexHeader">
+            <div class="header">
+                <h1>个人信息</h1>
+                <a href="javascript:window.history.back(-1)" class="return"><i class="icon-16"></i></a>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <div class="enterFor">
+        <form class="input-group" id="formEdit">
+            <input type="hidden" name="Id" value="@Model.Teacher.Id" />
+            <div class="input-row">
+                <label>姓名</label>
+                <input type="text" placeholder="请输入姓名" name="name" value="@Model.Teacher.Name" required>
+            </div>
+            <div class="input-row">
+                <label>性别</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="Gender" id="gender-0" hidden  value="False"><label for="gender-0" class="group-T-l icon-uniE940">男</label>
+                    <input type="radio" class="radio-la" name="Gender" id="gender-1" hidden value="True"><label for="gender-1" class="group-T-l icon-uniE940">女</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>出生日期</label>
+                <input type="text" name="birthDay" id="BirthDay" data-field="date" value="@Model.Teacher.BirthDay.ToString("yyyy-MM-dd")" readonly="readonly">
+
+            </div>
+            <div class="input-row">
+                <label>联系电话</label>
+                <input type="text" placeholder="填写手机号码" name="telPhone" value="@Model.Teacher.TelPhone" required pattern="^(13[0-9]|15[0|1|2|3|5|6|7|8|9]|17[7|8]|18[0|1|2|3|5|6|7|8|9]|19[8|9])\d{8}$">
+            </div>
+            <div class="input-row">
+                <label>身份证件</label>
+                <input type="text" readonly="readonly" id="IdCardType" placeholder="请选择" value="@Model.Teacher.IdCardTypeName">
+                <input type="hidden" readonly="readonly" id="IdCardTypeId" value="@Model.Teacher.IdCardTypeId" name="idCardTypeId">
+            </div>
+
+            <div class="input-row">
+                <label>证件号码</label>
+                <input type="text" placeholder="填写证件号码" name="idCardNum" value="@Model.Teacher.IdCardNum" pattern="^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$">
+            </div>
+            <div class="input-row">
+                <label>毕业学校</label>
+                <input type="text" placeholder="填写毕业学校" name="schoolName" value="@Model.Teacher.SchoolName">
+            </div>
+            <div class="input-row">
+                <label>最高学历</label>
+                <input type="text" readonly="readonly" id="HighestEducation" placeholder="请选择" value="@Model.Teacher.HighestEducationName">
+                <input type="hidden" readonly="readonly" id="HighestEducationId" name="highestEducationId" value="@Model.Teacher.HighestEducationId">
+            </div>
+            <div class="input-row">
+                <label>是否党员</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsPartyMember" id="IsPartyMember-0" hidden  value="False"><label for="IsPartyMember-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsPartyMember" id="IsPartyMember-1" hidden value="True"><label for="IsPartyMember-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>联系地址</label>
+                <input type="text" placeholder="请输入联系地址" name="homePlace" value="@Model.Teacher.HomePlace" required>
+            </div>
+            <div class="input-row">
+                <label>职工类别</label>
+                <input type="text" readonly="readonly" id="TeacherType" placeholder="请选择" value="@Model.Teacher.TeacherTypeName">
+                <input type="hidden" readonly="readonly" id="TeacherTypeId" name="teacherTypeId" value="@Model.Teacher.TeacherTypeId">
+            </div>
+            <div class="input-row">
+                <label>任职岗位</label>
+                <input type="text" readonly="readonly" id="PostType" placeholder="请选择" value="@Model.Teacher.PostTypeName">
+                <input type="hidden" readonly="readonly" id="PostTypeId" name="postTypeId" value="@Model.Teacher.PostTypeId">
+            </div>
+            <div class="input-row">
+                <label>园长资格</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsLeader" id="IsLeader-0" hidden  value="False"><label for="IsLeader-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsLeader" id="IsLeader-1" hidden value="True"><label for="IsLeader-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>认证单位</label>
+                <input type="text" placeholder="请输入园长资格认证单位" id="LeaderAuthUnit" value="@Model.Teacher.LeaderAuthUnit" name="LeaderAuthUnit">
+            </div>
+            <div class="input-row">
+                <label>幼教专业</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsPreschoolEducation" id="IsYouJiao-0" hidden  value="False"><label for="IsYouJiao-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsPreschoolEducation" id="IsYouJiao-1" hidden value="True"><label for="IsYouJiao-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>职称</label>
+                <input type="text" readonly="readonly" id="ZhiCheng" placeholder="请选择" value="@Model.Teacher.ZhiChengName">
+                <input type="hidden" readonly="readonly" id="ZhiChengId" name="zhiChengId" value="@Model.Teacher.ZhiChengId">
+            </div>
+            <div class="input-row">
+                <label>教师类型</label>
+                <input type="text" readonly="readonly" id="EmployType" placeholder="请选择" value="@Model.Teacher.EmployTypeName">
+                <input type="hidden" readonly="readonly" id="EmployTypeId" name="employTypeId" value="@Model.Teacher.EmployTypeId">
+            </div>
+            <div class="input-row">
+                <label>基本工资</label>
+                <input type="text" placeholder="请输入基本工资" value="@Model.Teacher.BasePay" name="basePay">
+            </div>
+            <div class="input-row">
+                <label>养老保险</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsYangLao" id="IsYangLao-0" hidden  value="False"><label for="IsYangLao-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsYangLao" id="IsYangLao-1" hidden value="True"><label for="IsYangLao-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>医疗保险</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsYiLiao" id="IsYiLiao-0" hidden  value="False"><label for="IsYiLiao-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsYiLiao" id="IsYiLiao-1" hidden value="True"><label for="IsYiLiao-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>失业保险</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsShiYe" id="IsShiYe-0" hidden  value="False"><label for="IsShiYe-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsShiYe" id="IsShiYe-1" hidden value="True"><label for="IsShiYe-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>工伤保险</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsGongShang" id="IsGongShang-0" hidden  value="False"><label for="IsGongShang-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsGongShang" id="IsGongShang-1" hidden value="True"><label for="IsGongShang-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>生育保险</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsShengYu" id="IsShengYu-0" hidden  value="False"><label for="IsShengYu-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsShengYu" id="IsShengYu-1" hidden value="True"><label for="IsShengYu-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>公积金</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="IsGongJiJin" id="IsGongJiJin-0" hidden  value="False"><label for="IsGongJiJin-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="IsGongJiJin" id="IsGongJiJin-1" hidden value="True"><label for="IsGongJiJin-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>进园时间</label>
+                <input type="text" name="comeDate" id="ComeDate" data-field="date" value="@Model.Teacher.ComeDate.ToString("yyyy-MM-dd")" readonly="readonly">
+
+            </div>
+            <div class="input-row">
+                <label>任职开始</label>
+                <input type="text" name="workStartTime" id="WorkStartTime" data-field="date" value="@Model.Teacher.WorkStartTime" readonly="readonly">
+
+            </div>
+            <div class="input-row">
+                <label>任职结束</label>
+                <input type="text" name="workEndTime" id="WorkEndTime" data-field="date" value="@Model.Teacher.WorkEndTime" readonly="readonly">
+
+            </div>
+            <div class="input-row">
+                <label>教师资格</label>
+                <div class="group-T" style="padding-left: 3.5rem;">
+                    <input type="radio" class="radio-la" name="HasTeacherCard" id="HasTeacherCard-0" hidden  value="False"><label for="HasTeacherCard-0" class="group-T-l icon-uniE940">否</label>
+                    <input type="radio" class="radio-la" name="HasTeacherCard" id="HasTeacherCard-1" hidden value="True"><label for="HasTeacherCard-1" class="group-T-l icon-uniE940">是</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label>证件种类</label>
+                <input type="text" readonly="readonly" id="TeacherCardType" placeholder="请选择" value="@Model.Teacher.TeacherCardTypeName">
+                <input type="hidden" readonly="readonly" name="teacherCardTypeId" id="TeacherCardTypeId" value="@Model.Teacher.TeacherCardTypeId">
+            </div>
+            <div class="input-row">
+                <label>证件号码</label>
+                <input type="text" placeholder="请输入教师资格证号码" id="teacherCardNum" value="@Model.Teacher.TeacherCardNum" name="teacherCardNum">
+            </div>
+            <div class="input-row">
+                <label>颁发机构</label>
+                <input type="text" placeholder="请输入教师资格证颁发机构" id="teacherCardAwardUnit" value="@Model.Teacher.TeacherCardAwardUnit" name="teacherCardAwardUnit">
+            </div>
+            <div class="input-row">
+                <label>颁发日期</label>
+                <input type="text" name="teacherCardAwardTime" id="TeacherCardAwardTime" data-field="date" value="@Model.Teacher.TeacherCardAwardTime" readonly="readonly">
+
+            </div>
+            <div id="dtBox"></div>
+            <button type="submit" class="btn cy-btn" id="btnEdit">保存</button>
+        </form>
+    </div>
+
+    <script src="~/content/js/jquery.min.js"></script>
+    <script src="~/content/js/jquery.validate.min.js"></script>
+    <script src="~/content/layer/mobile/layer.js"></script>
+    <script src="~/content/js/mobileSelect.js"></script>
+    <script src="~/content/js/DateTimePicker.js"></script>
+    <script>
+        function loadRadio() {
+            //加载radio的选中样式
+            var gender = '@(Model.Teacher.Gender)';
+            var isPartyMember = '@(Model.Teacher.IsPartyMember)';
+            var isLeader = '@Model.Teacher.IsLeader';
+            var isPreschoolEducation = '@Model.Teacher.IsPreschoolEducation';
+            var isYangLao = '@Model.Teacher.IsYangLao';
+            var isYiLiao = '@Model.Teacher.IsYiLiao';
+            var isShiYe = '@Model.Teacher.IsShiYe';
+            var isGongShang = '@Model.Teacher.IsGongShang';
+            var isShengYu = '@Model.Teacher.IsShengYu';
+            var isGongJiJin = '@Model.Teacher.IsGongJiJin';
+            var hasTeacherCard = '@Model.Teacher.HasTeacherCard';
+
+            var radios = $(":radio[name='Gender']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == gender) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsPartyMember']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isPartyMember) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsLeader']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isLeader) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsPreschoolEducation']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isPreschoolEducation) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsYangLao']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isYangLao) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+
+            radios = $(":radio[name='IsYiLiao']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isYiLiao) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsShiYe']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isShiYe) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsShengYu']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isShengYu) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsGongShang']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isGongShang) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='IsGongJiJin']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == isGongJiJin) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+            radios = $(":radio[name='HasTeacherCard']");
+            for (var i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val() == hasTeacherCard) {
+                    radios.eq(i).attr("checked", "checked");
+                }
+            }
+        }
+
+        $(document).ready(function() {
+            $("#dtBox").DateTimePicker();
+
+            /*园长资格关联*/
+            $(":input[name='IsLeader']").click(function() {
+                if ($(this).val() == 'True') {
+                    $("#LeaderAuthUnit").attr({ required: 'required' });
+                } else {
+                    $("#LeaderAuthUnit").removeAttr('required');
+                }
+            });
+            /*教师资格证关联*/
+            $(":input[name='HasTeacherCard']").click(function() {
+                if ($(this).val() == 'True') {
+                    $("#teacherCardNum").attr({ required: 'required' });
+                    $("#teacherCardAwardUnit").attr({ required: 'required' });
+                } else {
+                    $("#teacherCardNum").removeAttr('required');
+                    $("#teacherCardAwardUnit").removeAttr('required');
+                }
+            });
+
+            $("#formEdit").validate({
+                //验证通过后执行的方法
+                submitHandler: function() {
+                    var formData = $("#formEdit").serializeArray();
+                    var loading = layer.open({
+                        shadeClose: false,
+                        type: 2,
+                        content: '保存中'
+                    });
+                    $.ajax({
+                        url: '@Url.Action("Edit", "Teacher")',
+                        type: 'post',
+                        dataType: 'json',
+                        data: formData,
+                        beforeSend: function() {
+                            $("#btnEdit").attr({ disabled: "disabled" });
+                        },
+                        complete: function() {
+                            layer.close(loading);
+                            $("#btnEdit").attr({ disabled: false });
+                        },
+                        success: function(res) {
+                            if (res.status == "ok") {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '保存成功',
+                                    skin: 'msg',
+                                    time: 3, //3秒后自动关闭
+                                    end: function() {
+                                        window.location.href = "@Url.Action("Index", "Home")";
+                                    }
+                                });
+                                
+                        }
+                        else {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存失败：'+res.errorMsg,
+                                skin: 'msg',
+                                time: 3 //3秒后自动关闭
+                            });
+                        }
+                    },
+                    error: function() {
+                        layer.open({
+                            shadeClose: false,
+                            content: '网络异常,请联系管理员',
+                            skin: 'msg',
+                            time: 3 //3秒后自动关闭
+                        });
+                    }
+            });
+            }
+        });
+    });
+    //证件类型
+    var idCardTypes = new MobileSelect({
+        trigger: "#IdCardType",
+        title: "身份证件类型",
+        wheels: [
+            { data: @Html.Raw(Model.IdCardTypes)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#IdCardType").val(data[0].value);
+            $("#IdCardTypeId").val(data[0].id);
+        }
+    });
+    //最高学历
+    var HighestEducation = new MobileSelect({
+        trigger: "#HighestEducation",
+        title: "最高学历",
+        wheels: [
+            { data: @Html.Raw(Model.HighestEducation)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#HighestEducation").val(data[0].value);
+            $("#HighestEducationId").val(data[0].id);
+        }
+    });
+    //职工类别
+    var TeacherType = new MobileSelect({
+        trigger: "#TeacherType",
+        title: "职工类别",
+        wheels: [
+            { data: @Html.Raw(Model.TeacherType)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#TeacherType").val(data[0].value);
+            $("#TeacherTypeId").val(data[0].id);
+        }
+    });
+    //任职岗位
+    var PostType = new MobileSelect({
+        trigger: "#PostType",
+        title: "任职岗位",
+        wheels: [
+            { data: @Html.Raw(Model.PostType)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#PostType").val(data[0].value);
+            $("#PostTypeId").val(data[0].id);
+        }
+    });
+    //职称
+    var ZhiCheng = new MobileSelect({
+        trigger: "#ZhiCheng",
+        title: "职称",
+        wheels: [
+            { data: @Html.Raw(Model.ZhiCheng)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#ZhiCheng").val(data[0].value);
+            $("#ZhiChengId").val(data[0].id);
+        }
+    });
+    //教师类型
+    var EmployType = new MobileSelect({
+        trigger: "#EmployType",
+        title: "教师类型",
+        wheels: [
+            { data: @Html.Raw(Model.EmployType)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#EmployType").val(data[0].value);
+            $("#EmployTypeId").val(data[0].id);
+        }
+    });
+    //证件种类
+    var TeacherCardType = new MobileSelect({
+        trigger: "#TeacherCardType",
+        title: "证件种类",
+        wheels: [
+            { data: @Html.Raw(Model.TeacherCardType)}
+        ],
+        transitionEnd:function(indexArr, data){
+            //console.log(data);
+        },
+        callback:function(indexArr, data){
+            //console.log(data);
+            $("#TeacherCardType").val(data[0].value);
+            $("#TeacherCardTypeId").val(data[0].id);
+        }
+
+    });
+    </script>
+</body>
+</html>

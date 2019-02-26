@@ -1,0 +1,199 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>注册</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <header>
+            <div class="header">
+                <h1>注册账户</h1>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <!-- 注册 register-->
+    <div class="register">
+        <form class="input-group register-group" id="formSignup">
+            <div class="input-row">
+                <label><i class="icon-uniE938"></i></label>
+                <input type="text" placeholder="手机号码" id="account" name="account" pattern="^(13[0-9]|15[0|1|2|3|5|6|7|8|9]|17[7|8]|18[0|1|2|3|5|6|7|8|9]|19[8|9])\d{8}$">
+                 
+            </div>
+            
+            <div class="input-row">
+                <label><i class="icon-uniE92B"></i></label>
+                <div class="group-T">
+                    <input type="radio" class="radio-la" name="role" id="check-1" hidden checked="checked" value="2"><label for="check-1" class="group-T-l icon-uniE940">教师</label>
+                    <input type="radio" class="radio-la" name="role" id="check-2" hidden value="3"><label for="check-2" class="group-T-l icon-uniE940">后勤</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <label><i class="icon-uniE937"></i></label>
+                <input type="password" placeholder="密码" id="password" name="password" >
+                
+            </div>
+            <div class="input-row">
+                <label><i class="icon-uniE937"></i></label>
+                <input type="password" placeholder="确认密码" id="repassword" name="repassword" >
+                
+            </div>
+            <div class="input-row">
+                <label><i class="icon-uniE969"></i></label>
+                <input class="code-in" type="text" id="captcha" name="captcha" placeholder="验证码" >
+                @*<a class="code-a" href="#" class="btn">获取验证码</a>*@
+                <img class="code-img" id="imgVerifyCode" style="width: 80px" />
+            </div>
+            <button type="submit" class="btn cy-btn btn-red" id="btnSignup">注册</button>
+            <div class="clause-box">
+                @*注册即视为同意<a href="#" class="clause-t">《使用条款和隐私政策》</a>*@
+                <a href="/Account/Signin" class="fr clause-t">用户登录</a>
+            </div>
+        </form>
+
+    </div>
+<!-- 引用的js文件 -->
+<script src="~/content/js/jquery.min.js"></script>
+<script src="~/content/js/jquery.validate.min.js"></script>
+<script src="~/content/layer/mobile/layer.js"></script>
+    <script src="~/content/js/custom.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("#imgVerifyCode").click(function () {
+                $("#imgVerifyCode").attr("src", "/Account/CreateCaptcha?t=" + Math.random());
+            });
+            $("#imgVerifyCode").click();//避免部分浏览器刚打开时加载上次的缓存验证码
+
+            $("#formSignup").validate({
+                //验证规则
+                rules: {
+                    account: {
+                        required: true,
+                        //验证是否已存在
+                        remote: {
+                            url: '@Url.Action("Validate","Account")',
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                account: function () {
+                                    return $("#account").val();
+                                }
+                            }
+                        }
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 20
+                    },
+                    repassword: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 20,
+                        equalTo: '#password'
+                    },
+                    captcha: {
+                        required: true
+                    }
+                },
+                // 验证消息
+                messages: {
+                    account: {
+                        required: '请输入手机号',
+                        remote:'手机号已被占用'
+                    },
+                    password: {
+                        required: '请输入密码'
+                    },
+                    repassword : {
+                        required : '请输入确认密码',
+                        equalTo : '两次输入密码需一致'
+                    },
+                    captcha: {
+                        required: '请输入验证码'
+                    }
+                },
+
+                // 错误消息提示
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                },
+                //验证通过后提交事件
+                submitHandler: function (form) {
+                    var formData = $("#formSignup").serializeArray();
+                    var loading = layer.open({
+                        shadeClose: false,
+                        type: 2,
+                        content: '注册中'
+                    });
+                    $.ajax({
+                        url: "@Url.Action("Signup","Account")",
+                        type: "POST",
+                        dataType: "json",
+                        data: formData,
+                        beforeSend: function () {
+                            $("#btnSignup").attr({ disabled: "disabled" });
+                        },
+                        complete: function () {
+                            layer.close(loading);
+                            $("#btnSignup").attr({ disabled: false });
+                        },
+                        success: function (res) {
+                            if (res.status == "ok") {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '注册成功，请登录',
+                                    skin: 'msg',
+                                    time: 3, //3秒后自动关闭
+                                    end: function() {
+                                        window.location.href = "@Url.Action("Signin", "Account")";
+                                    }
+                                });
+                                
+                            } else {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '注册失败：' + res.errorMsg,
+                                    skin: 'msg',
+                                    time: 3, //3秒后自动关闭
+                                    end: function() {
+                                        $("#imgVerifyCode").click();
+                                    }
+                                });
+                                
+                            }
+
+                        },
+                        error: function () {
+                            layer.open({
+                                shadeClose: false,
+                                content: '网络异常',
+                                skin: 'msg',
+                                time: 3, //3秒后自动关闭
+                                end: function() {
+                                    $("#imgVerifyCode").click();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

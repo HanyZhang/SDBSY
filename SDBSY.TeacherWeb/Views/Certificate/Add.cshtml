@@ -1,0 +1,150 @@
+﻿@model CertificateAddViewModel
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>添加证书信息</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <link href="~/content/css/DateTimePicker.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <header>
+            <div class="header">
+                <h1>添加证书</h1>
+                <a href="javascript:window.history.back(-1)" class="return"><i class="icon-16"></i></a>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <!--新增信息-->
+    <div class="purchase c-Publish">
+        <form class="input-group" id="formAdd">
+            <input type="hidden" name="teacherId" value="@Model.TeacherId"/>
+            <div class="input-row">
+                <label>证书名称</label>
+                <input type="text" placeholder="请输入证书名称" name="name" required>
+            </div>
+
+            <div class="input-row">
+                <label>发证单位</label>
+                <input type="text" placeholder="请输入发证单位" name="awardUnit" required>
+            </div>
+            <div class="input-row">
+                <label>发证时间</label>
+                <input type="text" id="awardDateTime" name="awardDateTime" data-field="date" readonly="readonly">
+            </div>
+            <div class="input-row">
+                <label>证书编号</label>
+                <input type="text" placeholder="填输入证书编号" name="number" required>
+            </div>
+            <div>
+                <label>证书资料</label>
+                <div class="Pu-img" id="Pu-img">
+                    <a href="javascript:;" class="Pu-Add-img">
+                        <img src="~/content/images/add-img.png">
+                        <input type="file" id="upFiles" name="upFiles" accept="image/*" >
+                    </a>
+                </div>
+                <span id="warning" style="color:red;font-size:large;"></span>
+            </div>
+            <div id="dtBox"></div>
+            <button type="submit" id="btnAdd">保存</button>
+        </form>
+    </div>
+<script src="~/content/js/jquery.min.js"></script>
+<script src="~/content/js/jquery.validate.min.js"></script>
+<script src="~/content/layer/mobile/layer.js"></script>
+<script src="~/content/js/DateTimePicker.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#dtBox").DateTimePicker();
+
+        $("#formAdd").validate({
+            //验证通过后执行的方法
+            submitHandler: function() {
+                //var formData = $("#formAdd").serializeArray();
+                var formData = new FormData(document.getElementById("formAdd"));
+                var loading = layer.open({
+                    shadeClose: false,
+                    type: 2,
+                    content: '保存中'
+                });
+                $.ajax({
+                    url: '@Url.Action("Add","Certificate")',
+                    type: 'post',
+                    dataType: 'json',
+                    data: formData,
+                    contentType: false,//必须false才能加上正确的contentType
+                    processData: false,//必须false才能避开jq对formdata的默认处理
+                    beforeSend: function () {
+                        $("#btnAdd").attr({disabled:"disabled"});
+                    },
+                    complete: function() {
+                        layer.close(loading);
+                        $("#btnAdd").attr({ disabled: false });
+                    },
+                    success: function(res) {
+                        if (res.status == "ok") {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存成功',
+                                skin: 'msg',
+                                time: 3, //3秒后自动关闭
+                                end: function() {
+                                    window.location.href = "@Url.Action("List","Certificate")";
+                                }
+                            });
+                            
+                        }
+                        else {
+                            layer.open({
+                                shadeClose: false,
+                                content: '保存失败：'+res.errorMsg,
+                                skin: 'msg',
+                                time: 3 //3秒后自动关闭
+                            });
+                        }
+                    },
+                    error: function() {
+                        layer.open({
+                            shadeClose: false,
+                            content: '网络异常,请联系管理员',
+                            skin: 'msg',
+                            time: 3 //3秒后自动关闭
+                        });
+                    }
+                });
+            }
+        });
+    });
+    //控件选择文件触发change事件时对文件类型和大小验证
+    
+    $("#upFiles").change(function () {
+        var imgs = document.getElementsByClassName("imgselect");
+        if (imgs) {
+            //把之前加载的图片清空掉
+            var len = imgs.length;
+            for (var i = len-1;i>=0;i-- ) {
+                imgs[i].parentNode.removeChild(imgs[i]);
+            }
+        }
+        var files = document.getElementById("upFiles").files;
+        if (files && files[0]) {
+            for (var i = 0; i < files.length; i++) {
+                $("#Pu-img").prepend('<a href="javascript:; " class="imgselect"><img  src="' + window.URL.createObjectURL(files[i]) + '"></a>');
+            }
+        }
+        
+    });
+</script>
+</body>
+</html>

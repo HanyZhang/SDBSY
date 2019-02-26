@@ -1,0 +1,88 @@
+﻿
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="~/content/lib/html5.js"></script>
+    <script type="text/javascript" src="~/content/lib/respond.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="~/content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>新建权限</title>
+</head>
+<body>
+    <div class="pd-20">
+        <form class="form form-horizontal" id="form-user-character-add">
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>权限名称：</label>
+                <div class="formControls col-8">
+                    <input type="text" class="input-text" value="" placeholder="" id="Name" name="Name" datatype="*1-50" nullmsg="权限名称不能为空">
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>权限描述：</label>
+                <div class="formControls col-8">
+                    <input type="text" class="input-text" value="" placeholder="" id="Description" name="Description">
+                </div>
+                <div class="col-2"> </div>
+            </div>
+            <div class="row cl">
+                <div class="col-10 col-offset-2">
+                    <button type="button" class="btn btn-success radius" id="admin-perm-save" name="admin-perm-save"><i class="icon-ok"></i> 确定</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/icheck/jquery.icheck.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/Validform/5.3.2/Validform.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.admin.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var validForm = $("#form-user-character-add").Validform({ tiptype: 2 });
+            $("#admin-perm-save").click(function () {
+                if (validForm.check(false))//校验，返回是否校验成功
+                {
+                    var formData = $("#form-user-character-add").serializeArray();
+                    $.ajax({
+                        url: "/Permission/Add",
+                        type: "post",
+                        //data: { name: name, description: description },
+                        data: formData,
+                        success: function (data) {
+                            if (data.status == "ok") {
+                                layer.msg('保存成功!', { icon: 1, time: 3000 }, function () {
+                                    parent.location.reload();
+                                });
+                                //layer_close();
+                            }  else {
+                                layer.msg('保存失败!' + data.errorMsg, { icon: 2, time: 3000 });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('网络请求失败!', { icon: 2, time: 3000 });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+

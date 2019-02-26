@@ -1,0 +1,471 @@
+﻿@model EditInfoViewModel
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="~/content/lib/html5.js"></script>
+    <script type="text/javascript" src="~/content/lib/respond.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="~/content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="~/content/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <link href="~/content/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" />
+    <title>幼儿信息</title>
+</head>
+<body onload="loadRadio()">
+    <div class="pd-20">
+        <form action="" method="post" enctype="multipart/form-data" class="form form-horizontal" id="object-edit">
+            <input type="hidden" id="Id" name="Id" value="@Model.Student.Id ">
+            <div class="row cl">
+                <label class="form-label col-3"><span class="c-red">*</span>班级：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("ClassId", new SelectList(Model.Classes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.ClassId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3"><span class="c-red">*</span>入园日期：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.InKindergartenDate"
+                           id="InKindergartenDate" name="InKindergartenDate" datatype="*1-100" nullmsg="必填" readonly />
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">姓名：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.Name" placeholder="" id="name" name="name" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">性别：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="gender-1" value="False" name="gender">
+                        <label for="gender-1">男</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="gender-2" value="True" name="gender">
+                        <label for="gender-2">女</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">出生日期：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.BirthDate.ToString("yyyy-MM-dd")"
+                           id="BirthDate" name="BirthDate" readonly />
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">证件类型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("IdCardTypeId", new SelectList(Model.IdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.IdCardTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">证件号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.IdCardNum" placeholder="" id="IdCardNum" name="IdCardNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">血型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("BloodTypeId", new SelectList(Model.BloodTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.BloodTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">国籍：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("CountryId", new SelectList(Model.Countrties,
+                             nameof(CountryDTO.Id), nameof(CountryDTO.Name), Model.Student.CountryId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">民族：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("NationId", new SelectList(Model.Nations,
+                             nameof(NationDTO.Id), nameof(NationDTO.Name), Model.Student.NationId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">港澳台侨外：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("IdentityId", new SelectList(Model.Identities,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.IdentityId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">出生地：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("BirthPlaceId", new SelectList(Model.Places,
+                             nameof(NewPlaceDTO.Id), nameof(NewPlaceDTO.Name), Model.Student.BirthPlaceId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">籍贯：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.PriginPlace" placeholder="" readonly id="PriginPlace" name="PriginPlace">
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">户口性质：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("HuKouXingZhiId", new SelectList(Model.HuKouXingZhi,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.HuKouXingZhiId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">非农户口类型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("FeiNongHuKouTypeId", new SelectList(Model.FeiNongHuKouTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.FeiNongHuKouTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">户口所在地：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("HuKouPlaceId", new SelectList(Model.Places,
+                             nameof(NewPlaceDTO.Id), nameof(NewPlaceDTO.Name), Model.Student.HuKouPlaceId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">现住址：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.HomePlace" placeholder="" readonly id="HomePlace" name="HomePlace">
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">就读方式：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("StudyTypeId", new SelectList(Model.StudyTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.StudyTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否独生子女：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsOnlyBaby-1" value="False" name="IsOnlyBaby">
+                        <label for="IsOnlyBaby-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsOnlyBaby-2" value="True" name="IsOnlyBaby">
+                        <label for="IsOnlyBaby-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否留守儿童：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("IsStayAtHomeId", new SelectList(Model.IsStayAtHome,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.IsStayAtHomeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否进城务工子女：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsFollowWorkInCity-1" value="False" name="IsFollowWorkInCity">
+                        <label for="IsFollowWorkInCity-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsFollowWorkInCity-2" value="True" name="IsFollowWorkInCity">
+                        <label for="IsFollowWorkInCity-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">健康状况：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("HealthyTypeId", new SelectList(Model.HealthyTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.HealthyTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否残疾幼儿：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsDisability-1" value="False" name="IsDisability">
+                        <label for="IsDisability-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsDisability-2" value="True" name="IsDisability">
+                        <label for="IsDisability-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">残疾幼儿类别：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("DisabilityTypeId", new SelectList(Model.DisabilityTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.DisabilityTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">是否孤儿：</label>
+                <div class="formControls col-5 skin-minimal">
+                    <div class="radio-box">
+                        <input type="radio" id="IsOrphan-1" value="False" name="IsOrphan">
+                        <label for="IsOrphan-1">否</label>
+                    </div>
+                    <div class="radio-box">
+                        <input type="radio" id="IsOrphan-2" value="True" name="IsOrphan">
+                        <label for="IsOrphan-2">是</label>
+                    </div>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">监护人姓名：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.GuardianName" id="GuardianName" name="GuardianName" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">监护人身份证件类型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("GuardianCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.GuardianCardTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">监护人身份证件号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.GuardianCardNum" placeholder="" id="GuardianCardNum" name="GuardianCardNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">父亲姓名：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.FatherName" placeholder="" id="FatherName" name="FatherName" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">父亲证件类型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("FatherCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.FatherCardTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">父亲证件号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.FatherCardNum" placeholder="" id="FatherCardNum" name="FatherCardNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">父亲工作单位：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.FatherWorkUnit" id="FatherWorkUnit" name="FatherWorkUnit" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">父亲手机号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.FatherPhoneNum" placeholder="" id="FatherPhoneNum" name="FatherPhoneNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">母亲姓名：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.MotherName" placeholder="" id="motherName" name="motherName" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">母亲证件类型：</label>
+                <div class="formControls col-5">
+                    <span class="select-box" style="width:150px;">
+                        @Html.DropDownList("MotherCardTypeId", new SelectList(Model.AdultIdCardTypes,
+                             nameof(DataDictionaryDTO.Id), nameof(DataDictionaryDTO.Value), Model.Student.MotherCardTypeId), new { @class = "select" })
+                    </span>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">母亲证件号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.MotherCardNum" placeholder="" id="MotherCardNum" name="MotherCardNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">母亲工作单位：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.MotherWorkUnit" id="motherWorkUnit" name="motherWorkUnit" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">母亲手机号码：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.MotherPhoneNum" placeholder="" id="motherPhoneNum" name="motherPhoneNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">家庭其他联系电话：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.OtherTel" placeholder="" id="otherTel" name="otherTel" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3"><span class="c-red">*</span>有无传染病史：</label>
+                <div class="formControls col-5">
+                    <textarea name="hasInfection" class="textarea" datatype="*1-500" nullmsg="必填" readonly>@Model.Student.HasInfection</textarea>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">幼儿姓名开户的建设银行卡号：</label>
+                <div class="formControls col-5">
+                    <input type="text" class="input-text" value="@Model.Student.BankCardNum" placeholder="" id="BankCardNum" name="BankCardNum" readonly>
+                </div>
+                <div class="col-4"> </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">幼儿照片：</label>
+                <div class="formControls col-5">
+                    <a href="@Model.Student.PhotoUrl" data-lightbox="gallery" data-title="幼儿照片">
+                        <img src="@Model.Student.PhotoUrl" id="" />
+                    </a>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">幸福一家人：</label>
+                <div class="formControls col-5">
+                    <a href="@Model.Student.TijianUrl" data-lightbox="gallery" data-title="幸福一家人">
+                        <img src="@Model.Student.TijianUrl" id="" />
+                    </a>
+                </div>
+                <div class="col-4"></div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript" src="~/content/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/lib/lightbox2/2.8.1/js/lightbox-plus-jquery.min.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.js"></script>
+    <script type="text/javascript" src="~/content/js/H-ui.admin.js"></script>
+    <script type="text/javascript">
+        function loadRadio() {
+            //加载radio的选中样式
+            var gender= '@(Model.Student.Gender)' ;
+            var isOnlyBaby='@(Model.Student.IsOnlyBaby)';
+            var isFollowWorkInCity='@(Model.Student.IsFollowWorkInCity)';
+            var isDisability='@(Model.Student.IsDisability)';
+            var isOrphan='@(Model.Student.IsOrphan)';
+            var radios= $("input[name=gender]");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val()==gender) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+            radios= $("input[name=IsOnlyBaby]");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val()==isOnlyBaby) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+            radios= $("input[name=IsFollowWorkInCity]");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val()==isFollowWorkInCity) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+            radios= $("input[name=IsDisability]");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val()==isDisability) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+            radios= $("input[name=IsOrphan]");
+            for (i = 0; i < radios.length; i++) {
+                if (radios.eq(i).val()==isOrphan) {
+                    radios.eq(i).attr("checked","checked");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

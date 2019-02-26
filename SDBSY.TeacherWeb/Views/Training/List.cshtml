@@ -1,0 +1,158 @@
+﻿@model TrainingDTO[]
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>我的培训</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            background-color: #FAFAFA;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <header>
+            <div class="header">
+                <h1>我的培训</h1>
+                <a href="javascript:window.history.back(-1)" class="return"><i class="icon-16"></i></a>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <div class="userMyactivity-tab">
+
+        <ul class="userMy-content">
+            <li class="tab_content show">
+
+                @if (Model.Length <= 0)
+                {
+                    <span>暂无培训</span>
+                }
+                else
+                {
+                    <ul class="userMy-list userMy-paid">
+                        @foreach (var tra in Model)
+                        {
+                            <li class="MyacLi">
+                                <div class="Myacticity">
+                                    <h1>@tra.TrainingContent</h1>
+                                    <div class="userMy-firm">
+                                        <p>
+                                            <i class="icon-18"></i>
+                                            @tra.UnitName
+                                        </p>
+                                        <p>
+                                            <div class="cl"></div>
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--弹窗 start-->
+                                <div class="userMy-data">
+                                    <div class="userMy-dataText">
+                                        <p>培训年度：@tra.Year</p>
+                                        <p>培训机构：@tra.UnitName</p>
+                                        <p>培训项目：@tra.TrainingContent</p>
+                                        <p>培训级别：@tra.TrainingLevelName</p>
+                                        <p>培训形式：@tra.TrainingTypeName</p>
+                                        <p>培训学时：@tra.TrainingTime</p>
+                                        <a class="btn btn-green" href="/Training/Edit/@tra.Id">编辑</a>
+                                        <a class="btn btn-danger" onclick="del(@tra.Id)">删除</a>
+
+                                        <i class="icon-uniE959 off-i"></i>
+                                    </div>
+                                    <div class="dataBg"></div>
+                                </div>
+                                <!--弹窗 end-->
+                            </li>
+                        }
+                    </ul>
+                }
+
+            </li>
+        </ul>
+    </div>
+    <a href="@Url.Action("Add","Training")" class="comment-btn">
+
+        <i class="icon-uniE93E"></i>
+        添加培训
+    </a>
+    <!-- 引入js资源 -->
+    <script src="~/content/js/jquery.min.js"></script>
+    <script src="~/content/layer/mobile/layer.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.Myacticity').click(function() {
+                $(this).parent().addClass('dataShow').siblings().removeClass('dataShow');
+            });
+            $('.dataBg').click(function() {
+                $(this).parents("li.MyacLi").removeClass('dataShow');
+            });
+            $('.off-i').click(function() {
+                $(this).parents("li.MyacLi").removeClass('dataShow');
+            });
+        });
+
+        function edit(id) {
+            window.loaction.href = '@Url.Action("Edit","Training")'+'/'+id;
+        }
+
+        function del(id) {
+            layer.open({
+                content: '确定要删除本条信息吗？',
+                btn: ['确定', '取消'],
+                yes: function() {
+                    //ajax删除
+                    $.ajax({
+                        url: '@Url.Action("Del", "Training")',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {id:id},
+
+                        success: function(res) {
+                            if (res.status == "ok") {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '删除成功',
+                                    skin: 'msg',
+                                    time: 3, //3秒后自动关闭
+                                    end: function() {
+                                        window.location.reload();
+                                    }
+                                });
+
+                            }
+                            else {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '删除失败：'+res.errorMsg,
+                                    skin: 'msg',
+                                    time: 3 //3秒后自动关闭
+                                });
+                            }
+                        },
+                        error: function() {
+                            layer.open({
+                                shadeClose: false,
+                                content: '网络异常,请联系管理员',
+                                skin: 'msg',
+                                time: 3 //3秒后自动关闭
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+

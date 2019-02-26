@@ -1,0 +1,138 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>修改密码</title>
+    <link href="~/content/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/bass.css" rel="stylesheet" />
+    <link href="~/content/css/index.css" rel="stylesheet" />
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <header>
+            <div class="header">
+                <h1>修改密码</h1>
+                <a href="javascript:window.history.back(-1);" class="return"><i class="icon-16"></i></a>
+            </div>
+        </header>
+        <div style="height: 2.5rem;"></div>
+    </div>
+    <!--修改密码-->
+    <div class="register reset-password">
+        <form action="#" method="post" id="formResetPwd" class="input-group register-group">
+            <div class="input-row reset-p">
+                <label><i class="icon-uniE937"></i></label>
+                <input type="password" placeholder="新密码" name="newPwd" id="newPwd" required>
+            </div>
+            <div class="input-row reset-p">
+                <label><i class="icon-uniE937"></i></label>
+                <input type="password" placeholder="确认新密码" id="reNewPwd" name="reNewPwd" required>
+            </div>
+            <button type="submit" class="btn cy-btn reset-p-a" id="btnSave">下一步</button>
+        </form>
+    </div>
+    <!--修改密码end-->
+    <script src="~/content/js/jquery.min.js"></script>
+    <script src="~/content/js/jquery.validate.min.js"></script>
+    <script src="~/content/layer/mobile/layer.js"></script>
+    <script>
+    $(function() {
+        // 密码验证正则表达式
+        jQuery.validator.addMethod("regexPassword", function(value, element) {
+            return this.optional(element) || /^(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value);
+        }, "至少包含大写字母和小写字母");
+
+        $("#formResetPwd").validate({
+            //验证规则
+            rules: {
+                newPwd: {
+                    required: true,
+                    regexPassword: true
+                },
+                reNewPwd: {
+                    required: true,
+                    regexPassword: true,
+                    minlength: 6,
+                    maxlength: 20,
+                    equalTo: '#newPwd'
+                }
+            },
+            // 验证消息
+            messages: {
+                newPwd: {
+                    required: '请输入密码',
+                    regexPassword: '至少包含大写字母、小写字母'
+                },
+                reNewPwd : {
+                    required: '请输入确认密码',
+                    regexPassword: '至少包含大写字母、小写字母',
+                    equalTo : '两次输入密码需一致'
+                }
+            },
+            // 错误消息提示
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            },
+            //验证通过后提交事件
+                submitHandler: function (form) {
+                    var formData = $("#formResetPwd").serializeArray();
+                    var loading = layer.open({
+                        shadeClose: false,
+                        type: 2,
+                        content: '加载中'
+                    });
+                    $.ajax({
+                        url: "/Account/ResetPwdTwo",
+                        type: "POST",
+                        dataType: "json",
+                        data: formData,
+                        beforeSend: function () {
+                            $("#btnSave").attr({disabled:"disabled"});
+
+                        },
+                        complete: function() {
+                            layer.close(loading);
+                            $("#btnSave").attr({ disabled: false });
+                        },
+                        success: function (res) {
+                            if (res.status == "ok") {
+                                window.location.href = "@Url.Action("ResetPwdOK","Account")";
+                            } else {
+                                layer.open({
+                                    shadeClose: false,
+                                    content: '密码修改失败：'+res.errorMsg,
+                                    skin: 'msg',
+                                    time: 3//3秒后自动关闭
+                                });
+
+                            }
+
+                        },
+                        error: function() {
+                            layer.open({
+                                shadeClose: false,
+                                content: '网络异常',
+                                skin: 'msg',
+                                time: 3 //3秒后自动关闭
+                            });
+
+                        }
+                    });
+                }
+        });
+    });
+    </script>
+</body>
+</html>
+
+
